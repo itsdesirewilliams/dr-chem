@@ -1,0 +1,5 @@
+# Supabase CLI project configuration — DR-Chem
+# Minimal configuration: the project's schema is fully managed through
+# supabase/migrations/*.sql (timestamp-ordered). No local stack settings are
+# customized; defaults apply. No credentials belong in this file.
+project_id = "dr-chem"

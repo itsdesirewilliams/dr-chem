@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================================
+   DR-Chem design system
+   ============================================================================= */
+
+/* --- Fonts ----------------------------------------------------------------
+   Anek Devanagari (UI/body) and Merriweather (display/editorial) are the core
+   typefaces. The .woff2 files are self-hosted in public/fonts — drop them in
+   and the @font-face rules below activate automatically. Until the files are
+   present the browser falls back to premium system faces (UI sans / Georgia)
+   so the design never breaks.
+   See public/fonts/README.md for where to obtain the files.              */
+
+@font-face {
+  font-family: "Anek Devanagari";
+  src: url("/fonts/AnekDevanagari-Regular.woff2") format("woff2");
+  font-weight: 400 500 600 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Merriweather";
+  src: url("/fonts/Merriweather-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Merriweather";
+  src: url("/fonts/Merriweather-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- Tokens --------------------------------------------------------------- */
+:root {
+  --font-sans: "Anek Devanagari", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Merriweather", Georgia, "Iowan Old Style", "Times New Roman",
+    serif;
+}
+
+/* --- Base ---------------------------------------------------------------- */
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #fbfaf6;
+  color: #1a222c;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Consistent, visible focus states for keyboard users. */
+:focus-visible {
+  outline: 2px solid #1e7360;
+  outline-offset: 2px;
+}
+
+/* --- Utilities ------------------------------------------------------------ */
+
+/* Page container: fluid on mobile, capped on tablet/desktop. */
+.container-site {
+  width: 100%;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 640px) {
+  .container-site {
+    padding-inline: 1.75rem;
+  }
+}
+@media (min-width: 1024px) {
+  .container-site {
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-inline: 2rem;
+  }
+}
+
+/* Visually hidden but available to screen readers. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Thin hairline divider in brand tones. */
+.hairline {
+  border-top: 1px solid #d5d9df;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}

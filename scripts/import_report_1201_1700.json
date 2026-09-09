@@ -1,0 +1,22 @@
+{
+  "counts": {
+    "processed": 500,
+    "inserted": 498,
+    "updated": 0,
+    "skipped": 1,
+    "failed": 1
+  },
+  "errors": [
+    {
+      "article_no": "06092",
+      "file": "06092.json",
+      "reason": "QueryCanceled: canceling statement due to statement timeout\nCONTEXT:  while inserting index tuple (23,29) in relation \"property_definitions\" (conn.closed=False)"
+    }
+  ],
+  "warnings": null,
+  "source_dir": "D:\\dev\\loba-extractor\\output\\canonical",
+  "batch_size": 100,
+  "limit": 500,
+  "offset": 1200,
+  "driver": "psycopg3"
+}

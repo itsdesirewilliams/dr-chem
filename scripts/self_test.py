@@ -1,0 +1,11 @@
+import import_products as ip
+print("DRIVER:", ip.DRIVER)
+print("slug ACETIC:", ip.slugify("ACETIC ACID GLACIAL AR"))
+print("def_code physical Density [g/cm3]:", ip.def_code("physical", "Density [g/cm3]"))
+print("normalize CH3COOH:", ip.normalize_term("CH3COOH"))
+print("url_parts:", ip.url_parts("https://x/uploads/structure/64-19-7.gif"))
+print("shelf 60 Months:", ip.parse_shelf_life("60 Months"))
+print("shelf 24 Months (3 years):", ip.parse_shelf_life("24 Months (3 years)"))
+print("rev 04-Mar-2026:", ip.parse_revision_date("04-Mar-2026"))
+print("dec 1,049:", ip.parse_decimal("1,049"))
+print("dec bad:", ip.parse_decimal("not a number"))

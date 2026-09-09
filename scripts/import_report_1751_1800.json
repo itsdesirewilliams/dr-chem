@@ -1,0 +1,16 @@
+{
+  "counts": {
+    "processed": 50,
+    "inserted": 50,
+    "updated": 0,
+    "skipped": 0,
+    "failed": 0
+  },
+  "errors": [],
+  "warnings": null,
+  "source_dir": "D:\\dev\\loba-extractor\\output\\canonical",
+  "batch_size": 100,
+  "limit": 50,
+  "offset": 1750,
+  "driver": "psycopg3"
+}

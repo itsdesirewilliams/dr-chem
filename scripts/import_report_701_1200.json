@@ -1,0 +1,227 @@
+{
+  "counts": {
+    "processed": 500,
+    "inserted": 458,
+    "updated": 0,
+    "skipped": 0,
+    "failed": 42
+  },
+  "errors": [
+    {
+      "article_no": "03510",
+      "file": "03510.json",
+      "reason": "QueryCanceled: canceling statement due to statement timeout\nCONTEXT:  while inserting index tuple (20,8) in relation \"property_definitions\" (conn.closed=False)"
+    },
+    {
+      "article_no": "04130",
+      "file": "04130.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(22ac336a-05bb-458b-bd18-a3bb9db83c19) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04139",
+      "file": "04139.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(70a9633a-a7b6-4c8f-8edb-def99588fcd8) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04154",
+      "file": "04154.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(95550398-bc96-4454-afaa-7dc5aa61aa64) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04160",
+      "file": "04160.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(d9752bbf-c357-472f-9e8b-f37a38c1af8b) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04162",
+      "file": "04162.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(71e7055b-d13e-4a7e-ab88-87b6f64d2cd9) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04168",
+      "file": "04168.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(0e43da6b-80f3-4c03-ab4f-49105c6a46dd) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04180",
+      "file": "04180.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(5172d941-5803-48ad-81d4-d101c09de2e4) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04206",
+      "file": "04206.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(9d814094-e31c-4b54-abc1-c113931149b1) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04215",
+      "file": "04215.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(83bb2fdc-93d6-412c-a77d-1df4ac5fdd7e) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04230",
+      "file": "04230.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(99588e4d-5009-402c-9aad-6e4c5a1c8d16) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04240",
+      "file": "04240.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(712ad112-2390-4a5f-8041-fe703ac4f0d5) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04250",
+      "file": "04250.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(bfb69722-7af2-4e95-86f9-3e7b1baf2ff7) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04270",
+      "file": "04270.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(64d4d965-63f2-4929-8c48-2f77c403616b) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04300",
+      "file": "04300.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(99b90f82-5fea-4662-bfa9-5dada843b9c9) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04310",
+      "file": "04310.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(019ceb5f-f494-4c29-b2c8-7674930a63d8) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04320",
+      "file": "04320.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(e1c04079-10c9-479f-90d4-18dd05cff85b) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04340",
+      "file": "04340.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(eefee196-fde9-4d9c-9951-f871e730d5f3) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04360",
+      "file": "04360.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(f6777847-35d3-43e0-aadc-b127e0337415) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04361",
+      "file": "04361.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(de10fcdf-9652-4c15-ba9e-c2347422c198) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04363",
+      "file": "04363.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(fe21fed1-7db6-4a06-959a-3fa22b9f450d) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04372",
+      "file": "04372.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(a38e2c00-ae48-4673-a72a-8281ef87b286) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04373",
+      "file": "04373.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(8dcad5e0-91fb-48a3-8971-a6b67398b78c) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04375",
+      "file": "04375.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(de10fcdf-9652-4c15-ba9e-c2347422c198) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04376",
+      "file": "04376.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(eaaa2899-c335-4299-b402-dd03ec7a5c4f) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04377",
+      "file": "04377.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(388b5863-1c7a-46df-9164-fc453683d69f) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04379",
+      "file": "04379.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(0654dced-8094-405a-a29e-067a04924614) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04383",
+      "file": "04383.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(de10fcdf-9652-4c15-ba9e-c2347422c198) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04390",
+      "file": "04390.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(1a1a5cc1-6af7-475d-ac23-577cb5be3909) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04391",
+      "file": "04391.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(987320f4-8e98-4a63-ab23-890786c7a74d) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04392",
+      "file": "04392.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(26741d5d-f5a2-4f25-92b4-bedbe5b61d61) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04395",
+      "file": "04395.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(e3916b3a-e906-4013-aedb-3838db8e46b1) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04400",
+      "file": "04400.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(018da3cf-ffc3-4ee4-a216-eaf2fc3dfe73) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04410",
+      "file": "04410.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(d2fa9457-1a64-4a38-b97c-ebd1c7ac056e) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04411",
+      "file": "04411.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(07208766-97c2-4112-aad7-7bb705089a88) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04417",
+      "file": "04417.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(3be6a071-da0f-40e1-8b37-fb6ae8d64f43) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04422",
+      "file": "04422.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(53bcd51f-9916-475a-b203-62e6c27011c3) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04423",
+      "file": "04423.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(53bcd51f-9916-475a-b203-62e6c27011c3) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04535",
+      "file": "04535.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(a1636927-2c5e-4af6-a961-46dd1074e66d) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04536",
+      "file": "04536.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(987320f4-8e98-4a63-ab23-890786c7a74d) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04571",
+      "file": "04571.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(fe21fed1-7db6-4a06-959a-3fa22b9f450d) is not present in table \"property_definitions\". (conn.closed=False)"
+    },
+    {
+      "article_no": "04717",
+      "file": "04717.json",
+      "reason": "ForeignKeyViolation: insert or update on table \"product_properties\" violates foreign key constraint \"fk_product_properties_property_definitions\"\nDETAIL:  Key (property_definition_id)=(71e7055b-d13e-4a7e-ab88-87b6f64d2cd9) is not present in table \"property_definitions\". (conn.closed=False)"
+    }
+  ],
+  "warnings": null,
+  "source_dir": "D:\\dev\\loba-extractor\\output\\canonical",
+  "batch_size": 100,
+  "limit": 500,
+  "offset": 700,
+  "driver": "psycopg3"
+}

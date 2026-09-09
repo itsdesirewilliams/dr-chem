@@ -6,8 +6,8 @@ DR-Chem chemical product catalogue and business platform.
 
 - Next.js
 - TypeScript
-- PostgreSQL
-- Docker
+- PostgreSQL (currently hosted by Supabase, provider-agnostic)
+- Docker (retained for future self-hosted deployment)
 - PostgreSQL Full-Text Search
 - Self-hosted authentication
 - Product catalogue
@@ -19,7 +19,10 @@ DR-Chem chemical product catalogue and business platform.
 
 ## Development
 
-Local-first and portable architecture.
+The application connects to PostgreSQL through a single provider-agnostic
+`DATABASE_URL` (see `.env.example`). The current development database is
+hosted **Supabase PostgreSQL**. The `docker/` setup is preserved as portable
+infrastructure for future self-hosting.
 
 ## Deployment
 

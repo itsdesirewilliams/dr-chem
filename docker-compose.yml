@@ -1,0 +1,47 @@
+# DR-Chem local development stack.
+#
+# PostgreSQL only. All credentials are supplied through environment
+# variables (see docker/.env.example) — no passwords are hardcoded here.
+
+name: drchem
+
+services:
+  postgres:
+    # Stable PostgreSQL major version. See docker/README.md before bumping.
+    image: postgres:17-alpine
+    restart: unless-stopped
+
+    # Publish on loopback only for local development. Other containers can
+    # still reach this service on the internal network at hostname "postgres".
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-drchem}
+      POSTGRES_USER: ${POSTGRES_USER:-drchem}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set (copy docker/.env.example to .env first)}
+
+    # Persistent Docker volume for PostgreSQL data. Survives `docker compose down`.
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\"",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+    networks:
+      - drchem-net
+
+volumes:
+  postgres-data:
+
+networks:
+  drchem-net:
+    driver: bridge
