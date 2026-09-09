@@ -37,6 +37,12 @@ export function ProductHeader({ product }: { product: ProductDetail }) {
   );
 }
 
+/** Pick a property value by label regex (e.g. Grade, Purity). */
+function pickProperty(properties: PropertyRow[], re: RegExp): string | null {
+  const found = properties.find((p) => p.label && re.test(p.label.trim()));
+  return found?.valueText ?? null;
+}
+
 /* ---------------------------------------------------------------------------*/
 /*  ProductInfoTable — the large technical facts table (mobile-first dl)       */
 /* ---------------------------------------------------------------------------*/

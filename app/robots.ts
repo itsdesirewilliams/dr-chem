@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/search"],
       },
     ],
-    sitemapFileName: "sitemap.xml",
+    sitemap: "/sitemap.xml",
   };
 }

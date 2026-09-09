@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ProductSummary } from "@/lib/types";
+import { FlaskIcon } from "@/components/icons";
 import { Badge } from "@/components/ui";
 
 /**

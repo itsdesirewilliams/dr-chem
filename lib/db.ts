@@ -34,9 +34,14 @@ function pool(): Pool {
   return globalForDb.__drChemPool;
 }
 
-export interface DbRow {
-  [key: string]: unknown;
-}
+/**
+ * Any query result row. Deliberately `object` rather than an index-signature
+ * interface: TypeScript does not give implicit index signatures to named
+ * interfaces, so concrete row types (CategoryRow, CasRow, Packing, …) could
+ * never satisfy `T extends { [key: string]: unknown }`. Callers always use
+ * their own concrete row types; nothing indexes rows by arbitrary key.
+ */
+export type DbRow = object;
 
 /** Run a parameterised query, returning all rows. */
 export async function rows<T extends DbRow = DbRow>(

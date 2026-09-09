@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { ReactNode, ComponentPropsWithoutRef } from "react";
 import { FlaskIcon } from "@/components/icons";
 
 /* ---------------------------------------------------------------------------
@@ -50,26 +50,27 @@ export function Badge({
 
 /* ---------------------------------------------------------------------------
    Section / Container — page building blocks.
+   Accept any standard HTML section/div attributes (id, aria-*, data-*, …).
    --------------------------------------------------------------------------- */
 export function Section({
   className,
   children,
-}: {
-  className?: string;
-  children?: ReactNode;
-}) {
-  return <section className={className}>{children}</section>;
+  ...rest
+}: ComponentPropsWithoutRef<"section">) {
+  return (
+    <section className={className} {...rest}>
+      {children}
+    </section>
+  );
 }
 
 export function Container({
   className,
   children,
-}: {
-  className?: string;
-  children?: ReactNode;
-}) {
+  ...rest
+}: ComponentPropsWithoutRef<"div">) {
   const cls = ["container-site", className].filter(Boolean).join(" ");
-  return <div className={cls}>{children}</div>;
+  return <div className={cls} {...rest}>{children}</div>;
 }
 
 /* ---------------------------------------------------------------------------
@@ -132,14 +133,7 @@ export function CTA({
   className,
   children,
   ...rest
-}: {
-  href: string;
-  external?: boolean;
-  className?: string;
-  children?: ReactNode;
-  "aria-label"?: string;
-  "aria-current"?: string;
-}) {
+}: { href: string; external?: boolean } & ComponentPropsWithoutRef<"a">) {
   const cls = className ?? btn.primary;
   if (external) {
     return (
