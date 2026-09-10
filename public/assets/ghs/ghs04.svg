@@ -1,0 +1,14 @@
+<!-- GHS04 – Gas cylinder (UN GHS, public domain) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <polygon points="50,5 95,50 50,95 5,50" fill="none" stroke="#C22" stroke-width="4"/>
+  <polygon points="50,10 90,50 50,90 10,50" fill="#FFF"/>
+  <!-- Gas cylinder -->
+  <rect x="38" y="30" width="24" height="40" rx="3" fill="#000"/>
+  <rect x="38" y="30" width="24" height="40" rx="3" fill="none" stroke="#FFF" stroke-width="2"/>
+  <!-- Valve -->
+  <rect x="44" y="22" width="12" height="8" fill="#000"/>
+  <rect x="44" y="22" width="12" height="8" fill="none" stroke="#FFF" stroke-width="2"/>
+  <!-- Lines from valve -->
+  <line x1="50" y1="22" x2="50" y2="18" stroke="#000" stroke-width="3"/>
+  <path d="M48 16 C48 14, 52 14, 52 16" stroke="#000" stroke-width="3" fill="none"/>
+</svg>

@@ -16,10 +16,20 @@ interface CategoryRow {
  */
 export async function getCategoryTree(): Promise<CategoryNode[]> {
   const raw = await rows<CategoryRow>(
-    `SELECT c.id, c.slug, c.name, c.description, c.parent_id,
+    `WITH RECURSIVE sub(id, root) AS (
+       SELECT id, id FROM categories WHERE is_active
+       UNION ALL
+       SELECT c.id, s.root
+         FROM categories c
+         JOIN sub s ON c.parent_id = s.root
+        WHERE c.is_active
+     )
+     SELECT c.id, c.slug, c.name, c.description, c.parent_id,
             (SELECT COUNT(*)::int FROM product_categories pc
               JOIN products p ON p.id = pc.product_id
-             WHERE pc.category_id = c.id AND p.status = 'active') AS "productCount"
+             WHERE p.status = 'active'
+               AND pc.category_id IN (SELECT id FROM sub WHERE root = c.id)
+            ) AS "productCount"
        FROM categories c
       WHERE c.is_active
       ORDER BY c.sort_order, c.name`,

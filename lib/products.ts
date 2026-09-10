@@ -9,6 +9,8 @@ import type {
   DocumentRow,
   ImageRow,
   SourceUrlRow,
+  SafetyData,
+  GhsRow,
 } from "@/lib/types";
 
 /**
@@ -55,7 +57,7 @@ async function assembleDetail(
   p: Record<string, unknown>,
 ): Promise<ProductDetail> {
   const id = String(p.id);
-  const [cas, packings, properties, documents, images, sourceUrls, cats, revisions] =
+  const [cas, packings, properties, documents, images, sourceUrls, cats, revisions, safety, ghs] =
     await Promise.all([
       rows<CasRow>(
         `SELECT
@@ -138,6 +140,30 @@ async function assembleDetail(
           ORDER BY revision_date DESC`,
         [id],
       ),
+      one<SafetyData>(
+        `SELECT
+             signal_word AS "signalWord",
+             un_number AS "unNumber",
+             imco_class AS "imcoClass",
+             packing_group AS "packingGroup",
+             hazardous_statement AS "hazardousStatement",
+             precaution_statement AS "precautionStatement",
+             risk_statement AS "riskStatement",
+             safety_statement AS "safetyStatement",
+             revision_date AS "revisionDate",
+             source_url AS "sourceUrl"
+           FROM product_safety
+          WHERE product_id = $1`,
+        [id],
+      ),
+      rows<GhsRow>(
+        `SELECT ghs_code AS "ghsCode"
+           FROM product_safety_ghs
+           JOIN product_safety ps ON ps.id = product_safety_ghs.product_safety_id
+          WHERE ps.product_id = $1
+          ORDER BY ghs_code`,
+        [id],
+      ),
     ]);
 
   const synonyms = (
@@ -202,6 +228,8 @@ async function assembleDetail(
     categories: cats,
     revisionDates: revisions.map((r) => r.revisionDate),
     synonyms,
+    safety: safety ?? null,
+    ghs,
   };
 }
 /**
@@ -326,4 +354,3 @@ function toSummary(r: Record<string, unknown>): ProductSummary {
     shelfLifeText: r.shelf_life_text ? String(r.shelf_life_text) : null,
   };
 }
-

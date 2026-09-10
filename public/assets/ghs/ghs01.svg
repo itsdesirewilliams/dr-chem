@@ -1,0 +1,19 @@
+<!-- GHS01 – Exploding Bomb (UN GHS, public domain) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Red diamond border -->
+  <polygon points="50,5 95,50 50,95 5,50" fill="none" stroke="#C22" stroke-width="4"/>
+  <!-- White fill -->
+  <polygon points="50,10 90,50 50,90 10,50" fill="#FFF"/>
+  <!-- Black symbol: bomb body -->
+  <ellipse cx="50" cy="62" rx="16" ry="8" fill="#000"/>
+  <ellipse cx="50" cy="62" rx="16" ry="8" fill="none" stroke="#000" stroke-width="2"/>
+  <!-- Fuses -->
+  <path d="M50 38 L50 26" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+  <path d="M44 30 L48 22" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+  <path d="M56 30 L52 22" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+  <!-- Explosion lines -->
+  <path d="M34 58 L22 54" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+  <path d="M66 58 L78 54" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+  <path d="M42 72 L30 78" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+  <path d="M58 72 L70 78" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+</svg>

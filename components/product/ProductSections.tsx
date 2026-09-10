@@ -4,6 +4,8 @@ import type {
   PropertyRow,
   Packing,
   ProductSummary,
+  SafetyData,
+  GhsRow,
 } from "@/lib/types";
 import { ProductCardCompact } from "@/components/ProductCard";
 import { WhatsAppCTA } from "@/components/WhatsAppCTA";
@@ -17,12 +19,17 @@ import { CONTACT_EMAIL } from "@/lib/site";
 /* ---------------------------------------------------------------------------*/
 export function ProductHeader({ product }: { product: ProductDetail }) {
   return (
-    <div className="container-site mt-4 mb-6">
-      <div className="flex flex-col gap-3">
-        <h1 className="font-serif text-2xl sm:text-3xl font-bold leading-tight text-ink-900">
+    <div className="container-site mt-6 mb-8">
+      <div className="border-b border-ink-200 pb-6">
+        {product.primaryCategoryName ? (
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-jade-700">
+            {product.primaryCategoryName}
+          </p>
+        ) : null}
+        <h1 className="mt-2 font-serif text-[26px] leading-[1.12] tracking-[-0.01em] text-ink-900 sm:text-[32px] lg:text-[38px]">
           {product.name}
         </h1>
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="mt-4 flex flex-wrap items-center gap-2">
           {product.articleNumber ? (
             <Badge tone="ink">Article {product.articleNumber}</Badge>
           ) : null}
@@ -69,16 +76,16 @@ export function ProductInfoTable({ product }: { product: ProductDetail }) {
   if (!visible.length) return null;
   return (
     <div>
-      <h2 className="font-serif text-xl font-semibold text-ink-900">
-        Product Information
+      <h2 className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-500">
+        Product information
       </h2>
-      <dl className="mt-3 divide-y divide-ink-100 rounded-xl border border-ink-100 bg-white">
+      <dl className="mt-3 divide-y divide-ink-200 border-y border-ink-200">
         {visible.map((r) => (
           <div
             key={r.label}
-            className="flex flex-col gap-0.5 px-4 py-3 sm:flex-row sm:items-baseline sm:gap-0"
+            className="flex flex-col gap-1 py-3 sm:flex-row sm:items-baseline sm:gap-0"
           >
-            <dt className="w-full shrink-0 text-[12.5px] font-semibold uppercase tracking-[0.04em] text-ink-500 sm:w-44">
+            <dt className="w-full shrink-0 text-[11.5px] font-semibold uppercase tracking-[0.1em] text-ink-500 sm:w-48">
               {r.label}
             </dt>
             <dd className="min-w-0 flex-1 text-[15px] font-medium text-ink-900 break-words">
@@ -119,15 +126,15 @@ export function PropertiesSection({
   const physical = properties.filter((p) => p.propertyType === "physical");
 
   const renderGroup = (label: string, rows: PropertyRow[]) => (
-    <div key={label} className="rounded-xl border border-ink-100 bg-white">
-      <h3 className="px-3.5 py-2.5 text-[13px] font-bold uppercase tracking-[0.06em] text-jade-700">
+    <div key={label} className="border border-ink-200">
+      <h3 className="border-b border-ink-200 px-3.5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.1em] text-ink-500">
         {label}
       </h3>
-      <dl className="divide-y divide-ink-100">
+      <dl className="divide-y divide-ink-200">
         {rows.map((r, i) => (
           <div
             key={r.label ?? String(i)}
-            className="flex flex-col gap-1 px-3.5 py-3 sm:flex-row sm:items-baseline sm:gap-0"
+            className="flex flex-col gap-1 py-3.5 sm:flex-row sm:items-baseline sm:gap-0 sm:px-3.5"
           >
             <dt className="w-full text-[13.5px] font-semibold text-ink-700 sm:w-56 sm:shrink-0">
               {r.label}
@@ -154,62 +161,163 @@ export function PropertiesSection({
 }
 
 /* ---------------------------------------------------------------------------*/
-/*  SafetySection — real data only (revision dates, SDS/COA availability).     */
+/*  GHS pictogram assets — official UN GHS symbols served from /public.        */
+/* ---------------------------------------------------------------------------*/
+const GHS_ICONS: Record<string, string> = {
+  GHS01: "/assets/ghs/ghs01.svg",
+  GHS02: "/assets/ghs/ghs02.svg",
+  GHS03: "/assets/ghs/ghs03.svg",
+  GHS04: "/assets/ghs/ghs04.svg",
+  GHS05: "/assets/ghs/ghs05.svg",
+  GHS06: "/assets/ghs/ghs06.svg",
+  GHS07: "/assets/ghs/ghs07.svg",
+  GHS08: "/assets/ghs/ghs08.svg",
+  GHS09: "/assets/ghs/ghs09.svg",
+};
+
+/* ---------------------------------------------------------------------------*/
+/*  SafetySection — real LOBA safety data (GHS, hazard/precaution statements).  */
 /* ---------------------------------------------------------------------------*/
 export function SafetySection({ product }: { product: ProductDetail }) {
+  const safety = product.safety;
+  if (!safety) return null;
+
   const sds = product.documents.filter((d) => d.documentType === "sds");
   const coa = product.documents.filter((d) => d.documentType === "coa");
-  const latestRevision = formatDate(product.revisionDates?.[0] ?? null);
-  if (!latestRevision && sds.length === 0 && coa.length === 0) return null;
+  const ghsCodes: GhsRow[] = product.ghs ?? [];
+  const safetyRevisionDate = formatDate(safety.revisionDate);
+
+  /* Collect only non-null safety fields — never fabricate. */
+  const safetyFields: { label: string; value: string | null }[] = [
+    { label: "Signal Word", value: safety.signalWord },
+    { label: "UN Number", value: safety.unNumber },
+    { label: "IMCO Class", value: safety.imcoClass },
+    { label: "Packing Group", value: safety.packingGroup },
+    { label: "Hazardous Statement", value: safety.hazardousStatement },
+    { label: "Precaution Statement", value: safety.precautionStatement },
+    { label: "Risk Statement", value: safety.riskStatement },
+    { label: "Safety Statement", value: safety.safetyStatement },
+  ];
+  const visibleFields = safetyFields.filter((f) => f.value);
+
+  if (
+    visibleFields.length === 0 &&
+    ghsCodes.length === 0 &&
+    !safetyRevisionDate &&
+    sds.length === 0 &&
+    coa.length === 0
+  ) {
+        return null;
+  }
+
   return (
     <section id="safety">
       <SectionHeading title="Safety & Documentation" serif={false} />
-      <div className="mt-2 rounded-xl border border-ink-100 bg-white">
-        <dl className="divide-y divide-ink-100">
-          {latestRevision ? (
-            <div className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-baseline sm:gap-0">
-              <dt className="w-full text-[13.5px] font-semibold text-ink-700 sm:w-56 sm:shrink-0">
-                Data revision
-              </dt>
-              <dd className="min-w-0 flex-1 text-[14.5px] text-ink-800 break-words">
-                {latestRevision}
-              </dd>
+      <div className="mt-3 border border-ink-200">
+        {/* GHS pictogram grid */}
+        {ghsCodes.length > 0 ? (
+          <div className="border-b border-ink-200 px-4 py-4 sm:px-5 sm:py-5">
+            <h3 className="text-[12px] font-semibold uppercase tracking-[0.1em] text-ink-500">
+              Hazard Pictograms
+            </h3>
+            <div className="mt-3 flex flex-wrap gap-5">
+              {ghsCodes.map((g) => {
+                const code = g.ghsCode.toUpperCase();
+                const iconSrc = GHS_ICONS[code] ?? null;
+                return (
+                  <div key={code} className="flex flex-col items-center">
+                    <div className="h-14 w-14">
+                      {iconSrc ? (
+                        <img
+                          src={iconSrc}
+                          alt={code}
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      ) : (
+                        <span className="flex h-full w-full items-center justify-center text-[12px] font-medium text-ink-500">
+                          {code}
+                        </span>
+                      )}
+                    </div>
+                    <span className="mt-1 text-[12px] font-medium text-ink-500">
+                      {code}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
-          ) : null}
-          {sds.length > 0 ? (
-            <div className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-baseline sm:gap-0">
-              <dt className="w-full text-[13.5px] font-semibold text-ink-700 sm:w-56 sm:shrink-0">
-                Safety data sheet
-              </dt>
-              <dd className="min-w-0 flex-1 text-[14.5px] text-ink-800">
-                Available - see{" "}
-                <a href="#documents" className="text-jade-700 underline underline-offset-2">
-                  Documents below
-                </a>
-              </dd>
-            </div>
-          ) : null}
-          {coa.length > 0 ? (
-            <div className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-baseline sm:gap-0">
-              <dt className="w-full text-[13.5px] font-semibold text-ink-700 sm:w-56 sm:shrink-0">
-                Certificate of analysis
-              </dt>
-              <dd className="min-w-0 flex-1 text-[14.5px] text-ink-800">
-                Available - see{" "}
-                <a href="#documents" className="text-jade-700 underline underline-offset-2">
-                  Documents below
-                </a>
-              </dd>
-            </div>
-          ) : null}
-        </dl>
-        <p className="mt-1 px-4 pt-2.5 pb-2.5 text-[12.5px] leading-relaxed text-ink-500">
-          Additional GHS hazard data is not yet published for this product.
-        </p>
+          </div>
+        ) : null}
+
+        {/* Safety detail fields (only non-null values) */}
+        {visibleFields.length > 0 || safetyRevisionDate ? (
+          <dl className="divide-y divide-ink-200">
+            {safetyRevisionDate ? (
+              <div className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-baseline sm:gap-0">
+                <dt className="w-full text-[13.5px] font-semibold text-ink-700 sm:w-56 sm:shrink-0">
+                  Revision Date
+                </dt>
+                <dd className="min-w-0 flex-1 text-[14.5px] text-ink-800 break-words">
+                  {safetyRevisionDate}
+                </dd>
+              </div>
+            ) : null}
+            {visibleFields.map((f) => (
+              <div
+                key={f.label}
+                className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-baseline sm:gap-0"
+              >
+                <dt className="w-full text-[13.5px] font-semibold text-ink-700 sm:w-56 sm:shrink-0">
+                  {f.label}
+                </dt>
+                <dd className="min-w-0 flex-1 text-[14.5px] leading-relaxed text-ink-800 break-words">
+                  {f.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+
+        {/* SDS / COA document availability */}
+        {sds.length > 0 ? (
+          <div className="border-t border-ink-200 py-3 px-4 sm:px-5">
+            <dt className="text-[13.5px] font-semibold text-ink-700">
+              Safety data sheet
+            </dt>
+            <dd className="mt-1 text-[14.5px] text-ink-800">
+              Available - see{" "}
+              <a
+                href="#documents"
+                className="text-jade-700 underline underline-offset-2"
+              >
+                Documents below
+              </a>
+            </dd>
+          </div>
+        ) : null}
+        {coa.length > 0 ? (
+          <div className="border-t border-ink-200 py-3 px-4 sm:px-5">
+            <dt className="text-[13.5px] font-semibold text-ink-700">
+              Certificate of analysis
+            </dt>
+            <dd className="mt-1 text-[14.5px] text-ink-800">
+              Available - see{" "}
+              <a
+                href="#documents"
+                className="text-jade-700 underline underline-offset-2"
+              >
+                Documents below
+              </a>
+            </dd>
+          </div>
+        ) : null}
       </div>
     </section>
   );
 }
+
 
 /* ---------------------------------------------------------------------------*/
 /*  PackingsSection — real pack sizes, no duplicated "ml" debris               */
@@ -229,13 +337,13 @@ export function PackingsSection({ packings }: { packings: Packing[] }) {
   return (
     <section>
       <SectionHeading title="Available Packings" serif={false} />
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="mt-3 grid grid-cols-1 gap-px border border-ink-200 bg-ink-200 sm:grid-cols-2 lg:grid-cols-3">
         {packings.map((p, i) => {
           const size = packingSize(p);
           return (
             <div
               key={p.code ?? String(i)}
-              className="flex flex-col rounded-xl border border-ink-100 bg-white p-4"
+              className="flex flex-col bg-paper-50 p-4"
             >
               <p className="font-serif text-[16px] font-semibold text-ink-900">
                 {size ?? p.code}
@@ -269,11 +377,9 @@ export function SynonymsSection({ synonyms }: { synonyms: string[] }) {
   return (
     <section>
       <SectionHeading title="Synonyms" serif={false} />
-      <div className="mt-2 flex flex-wrap gap-2">
-        {synonyms.map((s) => (
-          <Badge key={s} tone="plain">{s}</Badge>
-        ))}
-      </div>
+      <p className="mt-2 text-[15px] leading-relaxed text-ink-700">
+        {synonyms.join(" · ")}
+      </p>
     </section>
   );
 }
@@ -285,7 +391,7 @@ export function RelatedSection({ related }: { related: ProductSummary[] }) {
   return (
     <section>
       <SectionHeading title="Related Products" serif={false} />
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="mt-2 border-t border-ink-100">
         {related.map((r) => (
           <ProductCardCompact key={r.id} product={r} />
         ))}
@@ -301,7 +407,7 @@ export function EnquiryRail({ product }: { product: ProductDetail }) {
   const subject = `Enquiry about ${product.articleNumber ?? product.slug} — ${product.name}`;
   return (
     <aside className="space-y-4">
-      <div className="rounded-xl border border-ink-100 bg-paper-100 p-4">
+      <div className="border border-ink-200 bg-paper-50 p-5">
         <h3 className="text-[16px] font-semibold text-ink-900">
           Get a Quote
         </h3>
@@ -317,7 +423,7 @@ export function EnquiryRail({ product }: { product: ProductDetail }) {
             Enquire by Email
           </Link>
           <WhatsAppCTA
-            message={`Hi DR-Chem, I would like to enquire about ${product.name} (${product.articleNumber ?? product.slug}).`}
+            message={`Hi DR Chemicals, I would like to enquire about ${product.name} (${product.articleNumber ?? product.slug}).`}
             label="Enquire on WhatsApp"
             className={btn.whatsapp + " w-full text-center"}
           />
@@ -333,7 +439,7 @@ export function EnquiryRail({ product }: { product: ProductDetail }) {
 export function MobileStickyBar({ product }: { product: ProductDetail }) {
   const subject = `Enquiry about ${product.articleNumber ?? product.slug} — ${product.name}`;
   return (
-    <div className="fixed inset-x-0 bottom-0 z-30 border-t border-ink-100 bg-white/95 backdrop-blur lg:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-30 border-t border-ink-200 bg-paper-50/95 backdrop-blur lg:hidden">
       <div className="flex items-center gap-3 px-4 py-3">
         <Link
           href={mailtoLink(CONTACT_EMAIL, { subject })}
@@ -343,7 +449,7 @@ export function MobileStickyBar({ product }: { product: ProductDetail }) {
           Enquire
         </Link>
         <WhatsAppCTA
-          message={`Hi DR-Chem, I would like to enquire about ${product.name} (${product.articleNumber ?? product.slug}).`}
+          message={`Hi DR Chemicals, I would like to enquire about ${product.name} (${product.articleNumber ?? product.slug}).`}
           label="WhatsApp"
           className={btn.whatsapp + " flex-1 justify-center text-[14px]"}
         />

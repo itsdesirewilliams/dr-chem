@@ -1,10 +1,11 @@
 /**
- * DR-Chem team directory.
+ * DR Chemicals team directory.
  *
- * Source: provided by the DR-Chem team (names + roles). Social/contact URLs
+ * Source: provided by the DR Chemicals team (names + roles). Social/contact URLs
  * are PLACEHOLDERS by design — replace the href strings below when real
- * profiles/numbers are provided. The UI components render whatever is in this
- * file, so no component changes are ever needed.
+ * profiles/numbers are provided, and set `image` to a local portrait path
+ * (e.g. "/team/deewanshu.jpg" in /public) when real portraits exist. The UI
+ * renders whatever is in this file; no component changes are needed.
  */
 
 export interface TeamMember {
@@ -14,31 +15,31 @@ export interface TeamMember {
   linkedinHref: string;
   /** Real WhatsApp chat URL (wa.me/<digits>) — placeholder until provided. */
   whatsappHref: string;
-  /** Short blurb — keep factual; omit rather than invent. */
-  blurb: string;
+  /** Local portrait path under /public — null renders the neutral placeholder. */
+  image: string | null;
 }
 
 export const TEAM: TeamMember[] = [
   {
     name: "Deewanshu Anand",
-    role: "Director",
+    role: "The Director",
     linkedinHref: "https://www.linkedin.com/in/REPLACE_WITH_PROFILE",
     whatsappHref: "https://wa.me/000000000000",
-    blurb: "Leads DR-Chem’s vision, partnerships and growth across markets.",
+    image: null,
   },
   {
     name: "Jaskaran Singh",
-    role: "Manager",
+    role: "The Manager",
     linkedinHref: "https://www.linkedin.com/in/REPLACE_WITH_PROFILE",
     whatsappHref: "https://wa.me/000000000000",
-    blurb: "Oversees operations, supply and day-to-day client coordination.",
+    image: null,
   },
   {
     name: "Simran Kaur",
     role: "Marketing Executive",
     linkedinHref: "https://www.linkedin.com/in/REPLACE_WITH_PROFILE",
     whatsappHref: "https://wa.me/000000000000",
-    blurb: "Drives outreach, enquiries and client communication for DR-Chem.",
+    image: null,
   },
 ];
 

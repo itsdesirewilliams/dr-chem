@@ -254,6 +254,8 @@ class Importer:
         # §4.1.1: pre-existing slugs + every slug minted this run.
         self._used_slugs = set()
         self._def_cache = {}  # property_definitions.code -> id
+        self._article_gate = None  # optional set of article numbers to import
+        self.missing_articles = None  # populated by --missing-only
         self._progress_total = None
         self._progress_started_at = None
         self._progress_last_reported = 0
@@ -315,9 +317,16 @@ class Importer:
 
     @staticmethod
     def _is_transient_transaction_failure(exc):
-        """Return True for PostgreSQL errors that should retry the whole batch."""
+        """Return True for PostgreSQL errors that should retry the whole batch.
+
+        57014 (statement_timeout) is included: the timeout aborts the entire
+        transaction, so any definition rows inserted earlier in that batch are
+        rolled back with it. The batch driver rolls back, clears caches,
+        re-seeds shared lookups and retries — records never fail permanently
+        because of a timeout.
+        """
         sqlstate = getattr(exc, "sqlstate", None) or getattr(exc, "pgcode", None)
-        if sqlstate in {"40001", "40P01"}:  # serialization_failure / deadlock_detected
+        if sqlstate in {"40001", "40P01", "57014"}:  # serialization / deadlock / timeout
             return True
         return False
 
@@ -346,6 +355,29 @@ class Importer:
             cur.execute("SELECT slug FROM products WHERE slug IS NOT NULL")
             self._used_slugs = {row[0] for row in cur.fetchall()}
 
+    def _load_existing_articles(self):
+        """Normalized set of article numbers / legacy refs already in products."""
+        with self.conn.cursor() as cur:
+            cur.execute("SELECT article_number, legacy_ref FROM products")
+            rows = cur.fetchall()
+        existing = set()
+        for article, legacy in rows:
+            for value in (article, legacy):
+                if isinstance(value, str) and value.strip():
+                    existing.add(value.strip().lower())
+        return existing
+
+    def list_missing_articles(self):
+        """Canonical article numbers (filenames) absent from products. Read-only."""
+        existing = self._load_existing_articles()
+        return sorted(
+            {
+                path.stem.strip()
+                for path in sorted(self.source_dir.glob("*.json"))
+                if path.stem.strip().lower() not in existing
+            }
+        )
+
     def _slug_for(self, cur, name: str, legacy_ref: str) -> str:
         """Collision-safe slug strategy (§4.1.1). Deterministic + idempotent."""
         base = slugify(name) or "product"
@@ -371,64 +403,45 @@ class Importer:
             counter += 1
 
     def _property_definition_id(self, cur, prop_type: str, label: str):
-        """Return a stable property-definition ID without concurrent-index races.
+        """Return a stable property-definition ID without stale-lookup races.
 
-        Property definitions are shared by all products. Concurrent imports can
-        otherwise contend on the unique ``code`` index and, after a transaction
-        rollback, a cached ID can become stale. We serialize creation/lookup by
-        definition code, and the cache is invalidated on every transaction
-        rollback by the batch/record recovery paths.
+        The lookup is a SINGLE atomic statement:
+            INSERT ... ON CONFLICT (code) DO UPDATE
+                SET label = property_definitions.label   -- no-op, keeps the
+                RETURNING id                             -- first source wording
+
+        The returned row is either newly inserted or already present, so the
+        ID is always visible to every later statement in this transaction.
+        This removes the entire class of stale-cache FK failures on
+        ``product_properties`` (e.g. a statement_timeout rolling back a
+        transaction whose definition IDs were already cached).
+
+        Creation is serialized per code (advisory xact lock) so concurrent
+        importer processes do not contend on the unique ``code`` index.
+        Statement timeouts (57014) and deadlocks escalate to the batch driver,
+        which rolls back, clears caches, re-seeds and retries the batch.
         """
         code = def_code(prop_type, label)
         if code in self._def_cache:
             return self._def_cache[code]
 
-        # Serialize concurrent creators of the same definition code. This is
-        # transaction-scoped and releases automatically at batch commit.
         cur.execute(
             "SELECT pg_advisory_xact_lock(hashtextextended(%s, 0))",
             (f"property_definition:{code}",),
         )
-
-        for attempt in range(1, MAX_PROPERTY_DEFINITION_RETRIES + 1):
-            try:
-                cur.execute(
-                    """
-                    INSERT INTO property_definitions (code, property_type, label)
-                    VALUES (%s, %s, %s)
-                    ON CONFLICT (code) DO NOTHING
-                    """,
-                    (code, prop_type, label),
-                )
-                cur.execute(
-                    "SELECT id FROM property_definitions WHERE code = %s",
-                    (code,),
-                )
-                row = cur.fetchone()
-                if row is None:
-                    raise RuntimeError(
-                        f"property definition disappeared after insert/lookup: {code}"
-                    )
-                def_id = row[0]
-                self._def_cache[code] = def_id
-                return def_id
-            except Exception as exc:
-                sqlstate = getattr(exc, "sqlstate", None) or getattr(exc, "pgcode", None)
-                if sqlstate in {"40001", "40P01"}:
-                    raise TransientTransactionError(
-                        f"property definition {code}: {type(exc).__name__}: {exc}"
-                    ) from exc
-                if sqlstate != "57014" or attempt >= MAX_PROPERTY_DEFINITION_RETRIES:
-                    raise
-                # Statement timeout: the statement was canceled but the
-                # transaction can still be recovered through the savepoint.
-                self._log(
-                    f"[RECOVERY] property definition timeout for {code}; "
-                    f"retrying ({attempt}/{MAX_PROPERTY_DEFINITION_RETRIES})"
-                )
-                time.sleep(min(attempt, 2))
-
-        raise RuntimeError(f"unable to resolve property definition: {code}")
+        cur.execute(
+            """
+            INSERT INTO property_definitions (code, property_type, label)
+            VALUES (%s, %s, %s)
+            ON CONFLICT (code) DO UPDATE
+                SET label = property_definitions.label
+            RETURNING id
+            """,
+            (code, prop_type, label),
+        )
+        def_id = cur.fetchone()[0]
+        self._def_cache[code] = def_id
+        return def_id
 
     def _preseed_property_definitions(self, files):
         """Create all source property definitions once before product writes.
@@ -1047,8 +1060,15 @@ class Importer:
 
     # -- batch driver ---------------------------------------------------------
 
-    def run(self, limit=None, offset=0):
-        """Stream the source directory in batches, retrying transient connection loss."""
+    def run(self, limit=None, offset=0, only=None, missing_only=False):
+        """Stream the source directory in batches, retrying transient connection loss.
+
+        only:         iterable of article numbers — process ONLY these canonical
+                      records (targeted re-import).
+        missing_only: compare every canonical article number against the
+                      products table first and process only the absent ones
+                      (targeted recovery without re-importing the catalogue).
+        """
         files = sorted(self.source_dir.glob("*.json"))
         # Apply offset AFTER sorting, BEFORE limit.
         if offset:
@@ -1060,6 +1080,36 @@ class Importer:
                 f"No JSON files found in {self.source_dir!s}. "
                 "Use --source-dir to point at a different folder."
             )
+
+        gate = None
+        self.missing_articles = None
+
+        if missing_only:
+            existing = self._load_existing_articles()
+            missing = sorted(
+                {
+                    path.stem.strip()
+                    for path in files
+                    if path.stem.strip().lower() not in existing
+                }
+            )
+            self.missing_articles = missing
+            self._log(
+                f"[missing-only] {len(missing)} canonical article(s) absent "
+                f"from products:"
+            )
+            for article in missing:
+                self._log(f"  - {article}")
+            gate = {article.lower() for article in missing}
+
+        if only:
+            wanted = {
+                value.strip().lower() for value in only if value and value.strip()
+            }
+            self._log(f"[only] restricting run to {len(wanted)} article(s)")
+            gate = wanted if gate is None else (gate & wanted)
+
+        self._article_gate = gate
 
         self._progress_total = len(files)
         self._progress_started_at = time.monotonic()
@@ -1097,6 +1147,14 @@ class Importer:
                             if isinstance(record.get("article_no"), str)
                             else None
                         ) or path.stem
+
+                        if (
+                            self._article_gate is not None
+                            and article.strip().lower() not in self._article_gate
+                        ):
+                            self.counts["skipped"] += 1
+                            continue
+
                         self._process_one(record, article, path.name, idx)
                         self._log_progress()
 
@@ -1161,6 +1219,18 @@ class Importer:
                         # If rollback itself fails, reconnect and let the next
                         # attempt start from a clean connection.
                         self._reconnect()
+                    try:
+                        # Re-seed shared lookups so the retry cannot reference
+                        # definition rows whose uncommitted inserts were rolled
+                        # back together with the batch.
+                        self._preseed_property_definitions(batch)
+                    except Exception as preseed_exc:  # noqa: BLE001
+                        self._log(
+                            f"[RECOVERY] post-rollback re-seed failed: "
+                            f"{type(preseed_exc).__name__}: {preseed_exc}; "
+                            f"reconnecting instead"
+                        )
+                        self._reconnect()
                     self._log(
                         f"[RECOVERY] retrying batch "
                         f"{batch_start + 1}-{batch_start + len(batch)} "
@@ -1171,12 +1241,14 @@ class Importer:
 
         return self.counts, self.errors, self.warnings
 
-    def _process_one(self, record, article, filename, idx):
+    def _process_one(self, record, article, filename, idx, _retried=False):
         """Process one record inside its own SAVEPOINT.
 
         Ordinary data errors are isolated to the record. A connection-level
         failure is escalated to the batch driver so the entire uncommitted
-        batch can be retried safely.
+        batch can be retried safely. A stale foreign-key lookup (23503) —
+        e.g. a cached shared-lookup ID that no longer resolves — is retried
+        exactly once after invalidating the lookup caches.
         """
         try:
             with self.conn.cursor() as cur:
@@ -1233,6 +1305,32 @@ class Importer:
                     f"product {idx} article={article} file={filename}: "
                     f"{type(exc).__name__}: {exc}"
                 ) from exc
+
+            # Stale foreign-key lookups (23503): a cached shared-lookup ID
+            # (property_definitions, hs_codes, …) that no longer resolves.
+            # Recover the record ONCE: roll back to the savepoint, invalidate
+            # every lookup cache and re-run the record against committed state.
+            sqlstate = getattr(exc, "sqlstate", None) or getattr(exc, "pgcode", None)
+            if sqlstate == "23503" and not _retried:
+                try:
+                    with self.conn.cursor() as cur:
+                        cur.execute("ROLLBACK TO SAVEPOINT per_record")
+                except Exception as rb_exc:  # noqa: BLE001
+                    self._log(
+                        f"[ERROR] SAVEPOINT rollback also failed: "
+                        f"{type(rb_exc).__name__}: {rb_exc} "
+                        f"(original error above is preserved)"
+                    )
+                self._def_cache.clear()
+                self._log(
+                    f"[RECOVERY] stale foreign-key lookup at product {idx} "
+                    f"(article={article}, file={filename}): "
+                    f"{type(exc).__name__}: {exc}; caches invalidated, "
+                    f"retrying record once"
+                )
+                return self._process_one(
+                    record, article, filename, idx, _retried=True
+                )
 
             try:
                 with self.conn.cursor() as cur:

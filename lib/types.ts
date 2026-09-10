@@ -1,5 +1,5 @@
 /**
- * Shared domain types mapped from the DR-Chem PostgreSQL schema.
+ * Shared domain types mapped from the DR Chemicals PostgreSQL schema.
  * Field names intentionally mirror the database columns; nested objects are
  * the aggregated "presentation" shape assembled by lib/*.ts queries.
  */
@@ -88,6 +88,25 @@ export interface ProductDetail extends ProductSummary {
   revisionDates: string[];
   legacyRef: string | null;
   status: string;
+  safety: SafetyData | null;
+  ghs: GhsRow[];
+}
+
+export interface SafetyData {
+  signalWord: string | null;
+  unNumber: string | null;
+  imcoClass: string | null;
+  packingGroup: string | null;
+  hazardousStatement: string | null;
+  precautionStatement: string | null;
+  riskStatement: string | null;
+  safetyStatement: string | null;
+  revisionDate: string | null;
+  sourceUrl: string | null;
+}
+
+export interface GhsRow {
+  ghsCode: string;
 }
 
 export interface CategoryNode {

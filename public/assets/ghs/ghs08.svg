@@ -1,0 +1,18 @@
+<!-- GHS08 – Health hazard (UN GHS, public domain) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <polygon points="50,5 95,50 50,95 5,50" fill="none" stroke="#C22" stroke-width="4"/>
+  <polygon points="50,10 90,50 50,90 10,50" fill="#FFF"/>
+  <!-- Stylized person facing left, arms outstretched -->
+  <!-- Head -->
+  <circle cx="50" cy="38" r="7" fill="#000"/>
+  <!-- Torso -->
+  <path d="M43 45 L43 64 L47 64 L47 45 Z M57 45 L57 64 L53 64 L53 45 Z" fill="#000"/>
+  <!-- Arms outstretched -->
+  <path d="M43 48 L32 44" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+  <path d="M57 48 L68 44" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+  <!-- Legs -->
+  <path d="M45 64 L45 74" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+  <path d="M55 64 L55 74" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+  <!-- Sneeze/warning lines -->
+  <path d="M40 36 C36 32, 38 26, 44 24" fill="none" stroke="#000" stroke-width="4" stroke-linecap="round"/>
+</svg>

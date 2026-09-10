@@ -1,0 +1,16 @@
+<!-- GHS05 – Corrosion (UN GHS, public domain) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <polygon points="50,5 95,50 50,95 5,50" fill="none" stroke="#C22" stroke-width="4"/>
+  <polygon points="50,10 90,50 50,90 10,50" fill="#FFF"/>
+  <!-- Test tube -->
+  <path d="M44 28 L56 28 L56 70 L44 70 Z" fill="#000"/>
+  <path d="M44 28 L56 28 L56 70 L44 70 Z" fill="none" stroke="#FFF" stroke-width="1"/>
+  <!-- Corrosion liquid pouring down -->
+  <path d="M46 70 Q48 76 52 80 Q54 76 56 70" fill="#000"/>
+  <!-- Corroded hand -->
+  <path d="M40 78 C40 82, 42 86, 46 86 C50 86, 52 82, 52 78 C50 76, 48 74, 44 74 C40 74, 38 76, 40 78 Z" fill="#000"/>
+  <!-- Corroded metal -->
+  <path d="M58 78 L70 78 L70 82 L58 82 Z M60 74 L62 80 L58 80 Z M64 74 L67 80 L63 80 Z" fill="#000"/>
+  <!-- Corrosion marks on hand -->
+  <path d="M42 80 Q44 84 48 84" fill="none" stroke="#FFF" stroke-width="1"/>
+</svg>

@@ -1,97 +1,138 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { SITE_NAME, CONTACT_EMAIL, LINKEDIN_URL } from '@/lib/site';
-import { MailIcon, LinkedInIcon, CheckIcon } from '@/components/icons';
-import { CTA, SectionHeading, Container, Section } from '@/components/ui';
-import WhatsAppCTA from '@/components/WhatsAppCTA';
-import EnquiryForm from './EnquiryForm';
+import type { Metadata } from "next";
+import { Linkedin, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import {
+  SITE_NAME,
+  CONTACT_EMAIL,
+  LINKEDIN_URL,
+  ADDRESS_LINES,
+  PHONE_DISPLAY,
+  PHONE_TEL,
+  whatsappLink,
+} from "@/lib/site";
+import { Container, Section } from "@/components/ui";
+import EnquiryForm from "./EnquiryForm";
 
 export const metadata: Metadata = {
   title: `Contact — ${SITE_NAME}`,
   description:
-    'Contact DR-Chem: email, WhatsApp and a direct enquiry form for product questions, bulk pricing and documentation requests.',
+    "Contact DR Chemicals: email, WhatsApp and a direct enquiry form for product questions, bulk pricing and documentation requests.",
 };
 
 export default function ContactPage() {
+  const wa = whatsappLink("Hello DR Chemicals, I have an enquiry.");
+  const channels = [
+    {
+      label: "Email",
+      value: CONTACT_EMAIL,
+      href: `mailto:${CONTACT_EMAIL}`,
+      external: false,
+      icon: Mail,
+    },
+    ...(wa
+      ? [
+          {
+            label: "WhatsApp",
+            value: "Chat with our team",
+            href: wa,
+            external: true,
+            icon: MessageCircle,
+          },
+        ]
+      : []),
+    {
+      label: "Phone",
+      value: PHONE_DISPLAY,
+      href: PHONE_TEL,
+      external: false,
+      icon: Phone,
+    },
+  ];
+
   return (
     <>
-      <Section className="border-b border-neutral-200 bg-white">
+      <Section className="border-b border-ink-200">
         <Container>
-          <SectionHeading
-            eyebrow="Contact"
-            title="Get in touch"
-            description="Product questions, bulk pricing, documentation requests or anything else — choose whichever channel suits you."
-          />
-          {/* Channel cards — stacked on mobile, row on desktop */}
-          <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2">
-<a
-              href={`mailto:${CONTACT_EMAIL}`}
-              className="group flex min-h-24 items-center gap-4 rounded-2xl border border-neutral-200 bg-white p-5 transition hover:border-jade-300 hover:shadow-sm"
-            >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-jade-50">
-                <MailIcon className="h-6 w-6 text-jade-700" aria-hidden="true" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                  Email
-                </span>
-                <span className="block truncate text-base font-semibold text-neutral-900 group-hover:text-jade-700">
-                  {CONTACT_EMAIL}
-                </span>
-              </span>
-            </a>
+          <div className="py-14 sm:py-20">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-jade-700">
+              Contact
+            </p>
+            <h1 className="mt-3 max-w-3xl font-serif text-[30px] leading-[1.12] tracking-[-0.01em] text-ink-900 sm:text-[40px]">
+              Talk to the DR CHEMICALS team.
+            </h1>
+            <p className="mt-5 max-w-readable text-[15.5px] leading-relaxed text-ink-600">
+              Product questions, bulk pricing, documentation requests or
+              anything else — choose whichever channel suits you.
+            </p>
 
-            <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-              <div className="flex items-center gap-4">
-                <WhatsAppCTA
-                  label="Chat on WhatsApp"
-                  className="w-full sm:w-auto"
-                />
+            <div className="mt-10 grid grid-cols-1 gap-px border border-ink-200 bg-ink-200 sm:grid-cols-2 lg:grid-cols-3">
+              {channels.map((c) => (
+                <a
+                  key={c.label}
+                  href={c.href}
+                  {...(c.external
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                  className="group flex flex-col gap-3 bg-paper-50 p-5 transition-colors hover:bg-white"
+                >
+                  <span className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-500">
+                    <c.icon className="h-4 w-4 text-jade-700" aria-hidden="true" />
+                    {c.label}
+                  </span>
+                  <span className="break-words text-[15px] font-medium text-ink-900 transition-colors group-hover:text-jade-800">
+                    {c.value}
+                  </span>
+                </a>
+              ))}
+              <div className="flex flex-col gap-3 bg-paper-50 p-5">
+                <span className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-500">
+                  <MapPin className="h-4 w-4 text-jade-700" aria-hidden="true" />
+                  Office
+                </span>
+                <address className="text-[13.5px] not-italic leading-relaxed text-ink-700">
+                  {ADDRESS_LINES.map((line) => (
+                    <span key={line} className="block">{line}</span>
+                  ))}
+                </address>
               </div>
-              <p className="mt-3 text-sm text-neutral-600">
-                Fastest route for quick product availability and pricing
-                questions.
-              </p>
             </div>
-          </div>
 
-          {/* LinkedIn */}
-          <div className="mt-4 flex items-center gap-3 rounded-2xl border border-neutral-200 bg-white p-5">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#0A66C2]/10">
-              <LinkedInIcon className="h-5 w-5 text-[#0A66C2]" aria-hidden="true" />
-            </span>
-            <p className="text-sm text-neutral-700">
-              Follow DR-Chem on{' '}
+            <p className="mt-6 flex items-center gap-2 text-[13.5px] text-ink-500">
+              <Linkedin className="h-4 w-4 text-[#0A66C2]" aria-hidden="true" />
+              Follow DR Chemicals on{" "}
               <a
                 href={LINKEDIN_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-semibold text-neutral-900 underline underline-offset-4 hover:text-jade-700"
+                className="font-medium text-ink-900 underline underline-offset-4 transition-colors hover:text-jade-700"
               >
                 LinkedIn
-              </a>{' '}
-              for company updates.
+              </a>{" "}
+              — our only official social presence.
             </p>
           </div>
         </Container>
       </Section>
 
-      {/* Enquiry form */}
-      <Section className="bg-neutral-50" id="enquiry">
+      <Section className="bg-paper-50" id="enquiry">
         <Container>
-          <SectionHeading
-            eyebrow="Enquiry"
-            title="Send us an enquiry"
-            description="Tell us what you need and the DR-Chem team will get back to you."
-          />
-          <div className="mt-6 sm:mt-8">
-            <EnquiryForm />
+          <div className="grid grid-cols-1 gap-10 py-14 sm:py-20 lg:grid-cols-12">
+            <div className="lg:col-span-4">
+              <h2 className="font-serif text-[24px] leading-[1.2] tracking-[-0.01em] text-ink-900 sm:text-[28px]">
+                Send an enquiry.
+              </h2>
+              <p className="mt-4 max-w-readable text-[14.5px] leading-relaxed text-ink-600">
+                Tell us what you need and the DR Chemicals team will get back to
+                you.
+              </p>
+              <p className="mt-4 text-[13px] leading-relaxed text-ink-500">
+                Include the article number or CAS number if you are enquiring
+                about a specific product.
+              </p>
+            </div>
+            <div className="lg:col-span-7 lg:col-start-6">
+              <EnquiryForm />
+            </div>
           </div>
-          <p className="mt-4 flex items-center gap-2 text-sm text-neutral-500">
-            <CheckIcon className="h-4 w-4" aria-hidden="true" />
-            Include the article number or CAS number if you are enquiring about a
-            specific product.
-          </p>
         </Container>
       </Section>
     </>

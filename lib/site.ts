@@ -3,11 +3,11 @@
  *
  * Every piece of user-facing contact/link configuration lives here so real
  * values can be supplied later through environment variables without touching
- * any component. Values marked "source:" are grounded in official DR-Chem
+ * any component. Values marked "source:" are grounded in official DR Chemicals
  * pages (drchem.co.in/about, drchem.co.in/contact-us).
  */
 
-export const SITE_NAME = "DR-Chem";
+export const SITE_NAME = "DR Chemicals";
 
 /** Source: drchem.co.in/contact-us — company legal name shown in the footer. */
 export const COMPANY_LEGAL_NAME = "DR CHEMICALS LLP, India";

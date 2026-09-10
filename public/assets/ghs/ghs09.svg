@@ -1,0 +1,16 @@
+<!-- GHS09 – Environment (UN GHS, public domain) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <polygon points="50,5 95,50 50,95 5,50" fill="none" stroke="#C22" stroke-width="4"/>
+  <polygon points="50,10 90,50 50,90 10,50" fill="#FFF"/>
+  <!-- Dead fish -->
+  <path d="M30 70 C26 68, 22 62, 22 56 C22 50, 28 44, 34 44 C40 44, 44 48, 44 54 C44 56, 42 58, 40 58 C38 58, 34 60, 30 68 Z" fill="#000"/>
+  <path d="M28 52 L20 50" stroke="#000" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M32 48 L22 44" stroke="#000" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M26 58 L18 58" stroke="#000" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Dead tree -->
+  <path d="M72 62 L68 78 L60 78 L64 60 L72 62 Z" fill="#000"/>
+  <path d="M68 70 Q66 64 70 60" stroke="#000" stroke-width="3" fill="none"/>
+  <!-- Tree trunk -->
+  <rect x="66" y="70" width="4" height="8" fill="#000"/>
+  <path d="M68 70 Q64 66 60 70 Q64 76 68 78" fill="#000"/>
+</svg>

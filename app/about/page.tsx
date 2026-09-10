@@ -1,136 +1,143 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { SITE_NAME, CONTACT_EMAIL } from '@/lib/site';
-import { ShieldIcon, DocumentIcon, ArrowRightIcon, FlaskIcon } from '@/components/icons';
-import { CTA, SectionHeading, Container, Section } from '@/components/ui';
-import WhatsAppCTA from '@/components/WhatsAppCTA';
-import TeamCard from '@/components/TeamCard';
-import { team } from '@/app/data/team';
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { SITE_NAME, CONTACT_EMAIL } from "@/lib/site";
+import { SectionHeading, Container, Section } from "@/components/ui";
+import WhatsAppCTA from "@/components/WhatsAppCTA";
+import TeamCard from "@/components/TeamCard";
+import { team } from "@/app/data/team";
 
 export const metadata: Metadata = {
   title: `About — ${SITE_NAME}`,
   description:
-    'Who DR-Chem is: a supplier of laboratory chemicals, reagents and fine chemicals with a structured, searchable catalogue of 2,900+ products.',
+    "Who DR Chemicals is: a supplier of laboratory chemicals, reagents and fine chemicals with a structured, searchable catalogue of 2,900+ products.",
 };
 
 const capabilities = [
   {
-    icon: ShieldIcon,
-    title: 'Curated, structured catalogue',
-    body: 'More than 2,900 chemical products, each with specifications, pack sizes and reference data organised so buyers can evaluate quickly.',
+    name: "Curated, structured catalogue",
+    note: "More than 2,900 products, each with specifications, pack sizes and reference data organised for fast evaluation.",
   },
   {
-    icon: DocumentIcon,
-    title: 'Documentation access',
-    body: 'SDS/TDS and certificate documentation are surfaced per product, with enquiry channels one tap away when a document is not yet listed.',
+    name: "Documentation access",
+    note: "SDS/TDS and certificate documentation surfaced per product, with enquiry channels one tap away.",
   },
   {
-    icon: FlaskIcon,
-    title: 'Responsive supply',
-    body: 'Direct lines to our team by email and WhatsApp keep procurement moving — from first enquiry to delivered order.',
+    name: "Responsive supply",
+    note: "Direct lines to our team by email and WhatsApp — from first enquiry to delivered order.",
   },
 ];
 
 export default function AboutPage() {
   return (
     <>
-      {/* Hero — mobile-first */}
-      <Section className="border-b border-neutral-200 bg-white">
+      <Section className="border-b border-ink-200">
         <Container>
-          <SectionHeading
-            eyebrow="About DR-Chem"
-            title="A modern chemicals supplier, built around the catalogue"
-            description="DR-Chem supplies laboratory chemicals, reagents and fine chemicals to research laboratories, educational institutions and industrial customers."
-          />
-          <div className="mt-6 space-y-4 text-base leading-relaxed text-neutral-700 sm:mt-8 sm:text-lg">
-            <p>
-              Our catalogue brings together more than 2,900 products — each with
-              structured specifications, pack sizes and reference data — so that
-              buyers and procurement teams can find, evaluate and enquire without
-              friction.
-            </p>
-            <p>
-              We pair that catalogue with direct, personal service: clear product
-              data, straightforward enquiry channels, and a team that answers.
-            </p>
+          <div className="grid grid-cols-1 gap-10 py-14 sm:py-20 lg:grid-cols-12">
+            <div className="lg:col-span-8">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-jade-700">
+                About DR Chemicals
+              </p>
+              <h1 className="mt-3 font-serif text-[30px] leading-[1.12] tracking-[-0.01em] text-ink-900 sm:text-[40px]">
+                A modern chemicals supplier, built around the catalogue.
+              </h1>
+            </div>
+            <div className="lg:col-span-4 lg:pt-2">
+              <p className="text-[15.5px] leading-relaxed text-ink-600">
+                DR Chemicals supplies laboratory chemicals, reagents and fine
+                chemicals to research laboratories, educational institutions
+                and industrial customers.
+              </p>
+            </div>
           </div>
         </Container>
       </Section>
 
-      {/* Capabilities */}
-      <Section className="bg-neutral-50">
+      <Section className="bg-paper-50">
         <Container>
-          <SectionHeading eyebrow="What we do" title="Built for procurement" />
-          <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-3">
-            {capabilities.map(({ icon: Icon, title, body }) => (
-              <div
-                key={title}
-                className="rounded-2xl border border-neutral-200 bg-white p-5"
-              >
-                <Icon className="h-6 w-6 text-jade-600" aria-hidden="true" />
-                <h3 className="mt-3 text-base font-semibold text-neutral-900">
-                  {title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-                  {body}
-                </p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </Section>
-
-      {/* Team */}
-      <Section className="bg-white">
-        <Container>
-          <SectionHeading
-            eyebrow="Team"
-            title="The people behind DR-Chem"
-            description="A small, hands-on team — reachable directly through the catalogue."
-          />
-          <ul className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-3">
-            {team.map((member) => (
-              <li key={member.name}>
-                <TeamCard member={member} />
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </Section>
-
-      {/* CTA band */}
-      <Section className="bg-jade-700 text-white">
-        <Container>
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 className="font-display text-2xl font-semibold sm:text-3xl">
-                Talk to DR-Chem
+          <div className="grid grid-cols-1 gap-10 py-14 sm:py-20 lg:grid-cols-12">
+            <div className="lg:col-span-5">
+              <h2 className="font-serif text-[24px] leading-[1.2] tracking-[-0.01em] text-ink-900 sm:text-[28px]">
+                Structured data, personal service.
               </h2>
-              <p className="mt-2 max-w-md text-sm leading-relaxed text-jade-100">
+              <p className="mt-5 max-w-readable text-[15px] leading-relaxed text-ink-600">
+                Our catalogue brings together more than 2,900 products — each
+                with structured specifications, pack sizes and reference data
+                — so buyers and procurement teams can find, evaluate and
+                enquire without friction.
+              </p>
+              <p className="mt-4 max-w-readable text-[15px] leading-relaxed text-ink-600">
+                We pair that catalogue with direct, personal service: clear
+                product data, straightforward enquiry channels, and a team
+                that answers.
+              </p>
+            </div>
+            <ul className="divide-y divide-ink-200 border-y border-ink-200 lg:col-span-6 lg:col-start-7">
+              {capabilities.map((c) => (
+                <li key={c.name} className="py-5">
+                  <p className="text-[15.5px] font-semibold tracking-tight text-ink-900">
+                    {c.name}
+                  </p>
+                  <p className="mt-1 text-[13.5px] leading-relaxed text-ink-500">
+                    {c.note}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Container>
+      </Section>
+
+      <Section id="team">
+        <Container>
+          <div className="py-14 sm:py-20">
+            <SectionHeading
+              eyebrow="People"
+              title="The team"
+              lead="A small, hands-on team — reachable directly through the catalogue."
+              serif={false}
+            />
+            <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {team.map((member) => (
+                <TeamCard key={member.name} member={member} />
+              ))}
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      <Section className="bg-ink-950 text-white">
+        <Container>
+          <div className="flex flex-col gap-8 py-14 sm:py-20 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-xl">
+              <h2 className="font-serif text-[26px] leading-[1.15] tracking-[-0.01em] sm:text-[32px]">
+                Talk to DR CHEMICALS.
+              </h2>
+              <p className="mt-4 text-[15px] leading-relaxed text-ink-300">
                 Product questions, bulk pricing or documentation — our team is
                 one message away.
               </p>
+              <p className="mt-4 text-[13.5px] text-ink-400">
+                Prefer email? Write to{" "}
+                <a
+                  href={`mailto:${CONTACT_EMAIL}`}
+                  className="font-medium text-jade-300 underline underline-offset-4"
+                >
+                  {CONTACT_EMAIL}
+                </a>
+              </p>
             </div>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <WhatsAppCTA variant="secondary" label="Chat on WhatsApp" />
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <WhatsAppCTA label="Chat on WhatsApp" />
               <Link
                 href="/contact"
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-jade-300 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-jade-600"
+                className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md border border-ink-700 px-5 text-[14.5px] font-medium text-white transition-colors hover:border-jade-500 hover:text-jade-300"
               >
                 Contact page
-                <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
           </div>
-          <p className="mt-6 text-sm text-jade-200">
-            Prefer email? Write to{' '}
-            <a
-              href={`mailto:${CONTACT_EMAIL}`}
-              className="font-semibold underline underline-offset-4"
-            >
-              {CONTACT_EMAIL}
-            </a>
-          </p>
         </Container>
       </Section>
     </>

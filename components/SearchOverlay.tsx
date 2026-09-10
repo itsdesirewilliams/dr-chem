@@ -35,7 +35,7 @@ export function SearchOverlay() {
   if (!open) return null;
 
   return (
-    <div role="dialog" aria-modal="true" aria-label="Search DR-Chem catalogue" className="fixed inset-0 z-[60] bg-white">
+    <div role="dialog" aria-modal="true" aria-label="Search DR Chemicals catalogue" className="fixed inset-0 z-[60] bg-paper-100">
       <div className="container-site">
         <div className="flex items-center justify-between border-b border-ink-100 px-4 py-4">
           <p className="text-[15px] font-semibold text-ink-800">Search catalogue</p>

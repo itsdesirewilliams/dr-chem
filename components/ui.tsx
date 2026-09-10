@@ -1,31 +1,32 @@
 import Link from "next/link";
 import type { ReactNode, ComponentPropsWithoutRef } from "react";
-import { FlaskIcon } from "@/components/icons";
 
 /* ---------------------------------------------------------------------------
-   DR-Chem UI primitives — mobile-first, accessible, dependency-free.
+   DR Chemicals UI primitives — mobile-first, accessible, dependency-free.
    --------------------------------------------------------------------------- */
 
 const BTN_BASE =
-  "inline-flex items-center justify-center gap-2 rounded-lg font-semibold " +
-  "min-h-[44px] px-5 text-base transition-colors focus-visible:outline " +
-  "focus-visible:outline-2 focus-visible:outline-offset-2";
+  "inline-flex items-center justify-center gap-2 rounded-md font-medium " +
+  "min-h-[44px] px-5 text-[15px] transition-colors duration-200 " +
+  "focus-visible:outline focus-visible:outline-2 " +
+  "focus-visible:outline-offset-2";
 
 /** Shared button/CTA class map. Consumers may append layout overrides. */
 export const btn = {
-  primary: `${BTN_BASE} bg-jade-600 text-white hover:bg-jade-700 active:bg-jade-800`,
-  secondary: `${BTN_BASE} border border-ink-300 bg-white text-ink-800 hover:border-jade-600 hover:text-jade-700`,
-  ghost: `${BTN_BASE} text-jade-700 hover:bg-jade-50`,
-  whatsapp: `${BTN_BASE} bg-[#25D366] text-[#0B3B24] hover:bg-[#1FC95D]`,
+  primary: `${BTN_BASE} bg-jade-700 text-white hover:bg-jade-800 active:bg-jade-900`,
+  secondary: `${BTN_BASE} border border-ink-300 bg-transparent text-ink-800 hover:border-jade-600 hover:text-jade-700`,
+  ghost: `${BTN_BASE} text-ink-600 hover:text-jade-700`,
+  whatsapp: `${BTN_BASE} bg-[#25D366] text-[#08331D] hover:bg-[#1FC95D]`,
+  ink: `${BTN_BASE} bg-ink-900 text-white hover:bg-ink-800`,
 } as const;
 
 /* ---------------------------------------------------------------------------
    Badge — small labelled chip (article no., grade, status, synonyms…).
    --------------------------------------------------------------------------- */
 const BADGE_TONES: Record<"plain" | "ink" | "jade", string> = {
-  plain: "border border-ink-100 bg-white text-ink-600",
-  ink: "bg-ink-900 text-white border border-ink-900",
-  jade: "border border-jade-200 bg-jade-50 text-jade-700",
+  plain: "border border-ink-200 bg-white text-ink-600",
+  ink: "border border-ink-900 bg-ink-900 text-white",
+  jade: "border border-jade-200 bg-jade-50 text-jade-800",
 };
 
 export function Badge({
@@ -39,7 +40,7 @@ export function Badge({
 }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[12px] font-medium leading-none ${BADGE_TONES[tone]}${
+      className={`inline-flex items-center rounded-[3px] px-2 py-1 text-[11px] font-semibold uppercase leading-none tracking-[0.08em] ${BADGE_TONES[tone]}${
         className ? ` ${className}` : ""
       }`}
     >
@@ -97,23 +98,25 @@ export function SectionHeading({
     <>
       {eyebrow ? (
         <p
-          className={`mt-2 inline-block text-[13px] font-semibold uppercase tracking-[0.12em] text-jade-700${
-            center ? " mx-auto" : ""
+          className={`text-[11px] font-semibold uppercase tracking-[0.18em] text-jade-700${
+            center ? " text-center" : ""
           }`}
         >
           {eyebrow}
         </p>
       ) : null}
       <h2
-        className={`mt-3 ${serif ? "font-serif " : ""}text-2xl sm:text-3xl font-semibold leading-tight text-ink-900${
-          center ? " text-center" : ""
-        }`}
+        className={`${
+          serif
+            ? "font-serif text-[27px] leading-[1.12] tracking-[-0.01em] sm:text-[32px] lg:text-[36px]"
+            : "text-[20px] font-semibold tracking-tight sm:text-[22px]"
+        } mt-3 text-ink-900${center ? " text-center" : ""}`}
       >
         {title}
       </h2>
       {leadText ? (
         <p
-          className={`mt-3 max-w-readable text-[15.5px] leading-relaxed text-ink-600${
+          className={`mt-4 max-w-readable text-[15.5px] leading-relaxed text-ink-600${
             center ? " text-center" : ""
           }`}
         >
@@ -201,18 +204,14 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center gap-4 py-14 text-center">
-      <span
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-jade-50 text-jade-600"
-        aria-hidden="true"
-      >
-        <FlaskIcon className="h-7 w-7" />
-      </span>
-      <h2 className="font-serif text-xl font-semibold leading-snug text-ink-900">{title}</h2>
+    <div className="border-y border-ink-200 py-14">
+      <h2 className="text-[19px] font-semibold tracking-tight text-ink-900">{title}</h2>
       {message ? (
-        <p className="max-w-readable text-[15px] leading-relaxed text-ink-600">{message}</p>
+        <p className="mt-2 max-w-readable text-[14.5px] leading-relaxed text-ink-500">
+          {message}
+        </p>
       ) : null}
-      {action ? <div className="mt-1">{action}</div> : null}
+      {action ? <div className="mt-6">{action}</div> : null}
     </div>
   );
 }
@@ -222,21 +221,14 @@ export function EmptyState({
    --------------------------------------------------------------------------- */
 export function CardGridSkeleton({ count = 6 }: { count?: number }) {
   return (
-    <div
-      className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-      aria-hidden="true"
-    >
+    <div className="divide-y divide-ink-100 border-y border-ink-100" aria-hidden="true">
       {Array.from({ length: Math.max(1, count) }, (_, i) => (
-        <div
-          key={i}
-          className="animate-pulse overflow-hidden rounded-xl border border-ink-100 bg-white"
-        >
-          <div className="aspect-[16/9] w-full bg-ink-100" />
-          <div className="space-y-2.5 p-3.5">
-            <div className="h-3.5 w-2/3 rounded bg-ink-100" />
-            <div className="h-3.5 w-full rounded bg-ink-100" />
-            <div className="h-3.5 w-1/2 rounded bg-ink-100" />
+        <div key={i} className="flex items-center justify-between gap-6 py-4">
+          <div className="min-w-0 flex-1 space-y-2">
+            <div className="h-3.5 w-2/3 animate-pulse rounded bg-ink-100" />
+            <div className="h-3 w-1/3 animate-pulse rounded bg-ink-100" />
           </div>
+          <div className="h-3 w-16 shrink-0 animate-pulse rounded bg-ink-100" />
         </div>
       ))}
     </div>

@@ -5,7 +5,7 @@ import { useState, type FormEvent } from 'react';
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
 const inputClass =
-  'w-full min-h-11 rounded-xl border border-neutral-300 bg-white px-4 py-2.5 text-base text-neutral-900 placeholder:text-neutral-400 focus:border-jade-600 focus:outline-none focus:ring-2 focus:ring-jade-600/20';
+  'w-full min-h-11 rounded-md border border-ink-300 bg-white px-4 py-2.5 text-[15px] text-ink-900 placeholder:text-ink-400 transition-colors focus:border-jade-600 focus:outline-none focus:ring-2 focus:ring-jade-600/20';
 
 export default function EnquiryForm() {
   const [status, setStatus] = useState<Status>('idle');
@@ -52,18 +52,18 @@ export default function EnquiryForm() {
 
   if (status === 'success') {
     return (
-      <div className="rounded-2xl border border-jade-200 bg-jade-50 p-6 text-center">
-        <h3 className="font-display text-xl font-semibold text-jade-900">
+      <div className="border border-jade-200 bg-jade-50 p-6">
+        <h3 className="font-serif text-xl font-semibold text-jade-900">
           Enquiry sent
         </h3>
-        <p className="mt-2 text-sm text-jade-800">
-          Thank you — the DR-Chem team has received your message and will get
+        <p className="mt-2 text-sm leading-relaxed text-jade-800">
+          Thank you — the DR Chemicals team has received your message and will get
           back to you.
         </p>
         <button
           type="button"
           onClick={() => setStatus('idle')}
-          className="mt-4 inline-flex min-h-11 items-center rounded-full border border-jade-300 px-5 text-sm font-semibold text-jade-800 hover:bg-jade-100"
+          className="mt-5 inline-flex min-h-11 items-center rounded-md border border-jade-300 px-5 text-sm font-medium text-jade-800 transition-colors hover:bg-jade-100"
         >
           Send another enquiry
         </button>
@@ -74,11 +74,11 @@ export default function EnquiryForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6"
+      className="border border-ink-200 bg-white p-5 sm:p-6"
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="sm:col-span-1">
-          <label htmlFor="name" className="mb-1.5 block text-sm font-semibold text-neutral-800">
+          <label htmlFor="name" className="mb-1.5 block text-[13px] font-semibold text-ink-800">
             Name <span className="text-red-600">*</span>
           </label>
           <input
@@ -92,7 +92,7 @@ export default function EnquiryForm() {
           />
         </div>
         <div className="sm:col-span-1">
-          <label htmlFor="email" className="mb-1.5 block text-sm font-semibold text-neutral-800">
+          <label htmlFor="email" className="mb-1.5 block text-[13px] font-semibold text-ink-800">
             Email <span className="text-red-600">*</span>
           </label>
           <input
@@ -107,7 +107,7 @@ export default function EnquiryForm() {
           />
         </div>
         <div>
-          <label htmlFor="company" className="mb-1.5 block text-sm font-semibold text-neutral-800">
+          <label htmlFor="company" className="mb-1.5 block text-[13px] font-semibold text-ink-800">
             Company
           </label>
           <input
@@ -120,7 +120,7 @@ export default function EnquiryForm() {
           />
         </div>
         <div>
-          <label htmlFor="subject" className="mb-1.5 block text-sm font-semibold text-neutral-800">
+          <label htmlFor="subject" className="mb-1.5 block text-[13px] font-semibold text-ink-800">
             Subject
           </label>
           <input
@@ -132,7 +132,7 @@ export default function EnquiryForm() {
           />
         </div>
         <div className="sm:col-span-2">
-          <label htmlFor="productRef" className="mb-1.5 block text-sm font-semibold text-neutral-800">
+          <label htmlFor="productRef" className="mb-1.5 block text-[13px] font-semibold text-ink-800">
             Product reference
           </label>
           <input
@@ -144,7 +144,7 @@ export default function EnquiryForm() {
           />
         </div>
         <div className="sm:col-span-2">
-          <label htmlFor="message" className="mb-1.5 block text-sm font-semibold text-neutral-800">
+          <label htmlFor="message" className="mb-1.5 block text-[13px] font-semibold text-ink-800">
             Message <span className="text-red-600">*</span>
           </label>
           <textarea
@@ -161,7 +161,7 @@ export default function EnquiryForm() {
       {status === 'error' && errorMessage && (
         <p
           role="alert"
-          className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          className="mt-4 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
         >
           {errorMessage}
         </p>
@@ -170,7 +170,7 @@ export default function EnquiryForm() {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-jade-700 px-8 text-sm font-semibold text-white transition hover:bg-jade-600 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+        className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-md bg-jade-700 px-8 text-[15px] font-medium text-white transition-colors hover:bg-jade-800 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
         {status === 'submitting' ? 'Sending…' : 'Send enquiry'}
       </button>

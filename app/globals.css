@@ -3,46 +3,17 @@
 @tailwind utilities;
 
 /* =============================================================================
-   DR-Chem design system
+   DR Chemicals design system
+   Fonts (Anek Devanagari + Source Serif 4) are loaded with next/font/google in
+   app/layout.tsx and exposed as --font-sans / --font-serif. The :root values
+   below are fallbacks only.
    ============================================================================= */
-
-/* --- Fonts ----------------------------------------------------------------
-   Anek Devanagari (UI/body) and Merriweather (display/editorial) are the core
-   typefaces. The .woff2 files are self-hosted in public/fonts — drop them in
-   and the @font-face rules below activate automatically. Until the files are
-   present the browser falls back to premium system faces (UI sans / Georgia)
-   so the design never breaks.
-   See public/fonts/README.md for where to obtain the files.              */
-
-@font-face {
-  font-family: "Anek Devanagari";
-  src: url("/fonts/AnekDevanagari-Regular.woff2") format("woff2");
-  font-weight: 400 500 600 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Merriweather";
-  src: url("/fonts/Merriweather-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Merriweather";
-  src: url("/fonts/Merriweather-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
 
 /* --- Tokens --------------------------------------------------------------- */
 :root {
-  --font-sans: "Anek Devanagari", ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-serif: "Merriweather", Georgia, "Iowan Old Style", "Times New Roman",
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Source Serif 4", Georgia, "Iowan Old Style", "Times New Roman",
     serif;
 }
 
@@ -57,6 +28,11 @@ body {
   background-color: #fbfaf6;
   color: #1a222c;
   -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: #dbf0e4;
+  color: #0b362c;
 }
 
 /* Consistent, visible focus states for keyboard users. */
@@ -100,7 +76,12 @@ body {
 
 /* Thin hairline divider in brand tones. */
 .hairline {
-  border-top: 1px solid #d5d9df;
+  border-top: 1px solid #d9dde4;
+}
+
+/* Numerals inside data tables: keep tabular alignment. */
+.tnum {
+  font-variant-numeric: tabular-nums;
 }
 
 @media (prefers-reduced-motion: reduce) {

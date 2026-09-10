@@ -38,7 +38,7 @@ export default async function CategoryPage({
       />
 
       {category.children.length > 0 ? (
-        <div className="mt-6 flex flex-wrap gap-2" aria-label="Subcategories">
+        <div className="mt-8 flex flex-wrap gap-2" aria-label="Subcategories">
           {category.children.map((child) => (
             <span key={child.slug}>
               <CategoryChip slug={child.slug} name={`${child.name} (${child.productCount})`} />
@@ -48,7 +48,7 @@ export default async function CategoryPage({
       ) : null}
 
       {items.length === 0 ? (
-        <div className="mt-8">
+        <div className="mt-10">
           <EmptyState
             title="No products published in this category yet"
             message="Categories are being populated from the catalogue. Use search to find a specific product."
@@ -56,7 +56,7 @@ export default async function CategoryPage({
           />
         </div>
       ) : (
-        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="mt-10">
           {items.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
@@ -76,6 +76,6 @@ export async function generateMetadata({
   if (!category) return {};
   return {
     title: category.name,
-    description: `Browse ${category.name} products in the DR-Chem catalogue.`,
+    description: `Browse ${category.name} products in the DR Chemicals catalogue.`,
   };
 }

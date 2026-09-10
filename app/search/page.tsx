@@ -8,8 +8,8 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "Search — DR-Chem",
-  description: "Search DR-Chem's product catalogue.",
+  title: "Search — DR Chemicals",
+  description: "Search the DR Chemicals product catalogue.",
 };
 
 type SearchParams = Promise<{ q?: string }>;
@@ -24,18 +24,20 @@ export default async function SearchPage({
 
   if (!query) {
     return (
-      <div className="container-site py-10">
+      <div className="container-site py-10 lg:py-14">
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Search" }]} />
-        <EmptyState
-          title="Enter a search term"
-          message="Search for products by name, CAS number, article number, formula or synonym."
-        />
+        <div className="mt-6">
+          <EmptyState
+            title="Enter a search term"
+            message="Search for products by name, CAS number, article number, formula or synonym."
+          />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container-site py-10">
+    <div className="container-site py-10 lg:py-14">
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
@@ -43,7 +45,7 @@ export default async function SearchPage({
         ]}
       />
 
-      <Suspense fallback={<CardGridSkeleton count={6} />}>
+      <Suspense fallback={<div className="mt-10"><CardGridSkeleton count={6} /></div>}>
         <SearchResults query={query} />
       </Suspense>
     </div>
@@ -56,32 +58,39 @@ async function SearchResults({ query }: { query: string }) {
 
   return (
     <section className="mt-6">
-      <div className="flex items-baseline gap-3 mb-6">
-        <h1 className="font-serif text-xl sm:text-2xl font-bold text-ink-900">
+      <div className="flex flex-wrap items-baseline gap-3">
+        <h1 className="text-[22px] font-semibold tracking-tight text-ink-900 sm:text-[26px]">
           {total > 0
-            ? `Found ${total} product${total === 1 ? "" : "s"}`
+            ? `Found ${total.toLocaleString("en-IN")} product${total === 1 ? "" : "s"}`
             : "No results found"}
         </h1>
         {usedFuzzyFallback ? (
-          <span className="text-[13px] text-ink-500 italic">
-            (using fuzzy search)
+          <span className="border border-jade-200 bg-jade-50 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-jade-800">
+            Fuzzy match
           </span>
         ) : null}
       </div>
 
       {items.length === 0 ? (
-        <EmptyState
-          title="No products match your query."
-          message="Try a different search term, CAS number, or browse by category."
-          action={
-            <Link href="/categories" className={btn.secondary}>
-              Browse Categories
-            </Link>
-          }
-        />
+        <div className="mt-10">
+          <EmptyState
+            title="No products matched your search."
+            message={`Nothing in the catalogue matched “${query}”. Check the CAS or article number for typos, try the product name, or search a synonym — DR Chemicals can also source products that are not yet listed.`}
+            action={
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Link href="/categories" className={btn.secondary}>
+                  Browse categories
+                </Link>
+                <Link href="/contact" className={btn.primary}>
+                  Contact DR Chemicals
+                </Link>
+              </div>
+            }
+          />
+        </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="mt-8">
             {items.map((r) => (
               <ProductCard
                 key={r.slug}
@@ -90,7 +99,10 @@ async function SearchResults({ query }: { query: string }) {
                   slug: r.slug,
                   name: r.name,
                   articleNumber: r.articleNumber,
-                  summary: r.summary,
+                  summary:
+                    r.matchedTerm && r.matchedTerm.toLowerCase() !== r.name.toLowerCase()
+                      ? `Matched: “${r.matchedTerm}” (${sourceLabel(r.sourceType)})`
+                      : r.summary,
                   isFeatured: false,
                   primaryCas: r.primaryCas,
                   formula: r.formula,
@@ -105,9 +117,10 @@ async function SearchResults({ query }: { query: string }) {
           </div>
 
           {nextCursor ? (
-            <div className="mt-8 text-center text-[14px] text-ink-500">
-              Showing top {items.length} results. Refine your search for more precise results.
-            </div>
+            <p className="mt-8 border-t border-ink-200 pt-5 text-[13px] text-ink-500">
+              Showing the top {items.length} results. Refine your search for
+              more precise results.
+            </p>
           ) : null}
         </>
       )}

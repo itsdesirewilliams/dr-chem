@@ -23,7 +23,9 @@ export async function searchProducts(
     return { items: [], total: 0, nextCursor: null, usedFuzzyFallback: false };
   }
 
-    // Stage 1: ranked full-text search.
+    // Stage 1: ranked full-text search. Exact term matches surface first,
+    // then source priority (article > CAS > name > synonym > formula > other),
+    // then FTS rank. The ranking itself is never exposed to users.
   const ftsRows = await rows<FtsRow>(
     `SELECT p.slug, p.name, p.article_number AS "articleNumber", p.summary,
             st.term, st.source_type AS "sourceType",
@@ -37,9 +39,17 @@ export async function searchProducts(
        JOIN products p ON p.id = st.product_id
       WHERE p.status = 'active'
         AND st.search_vector @@ plainto_tsquery(st.ts_config, $1)
-      ORDER BY rank DESC, p.id DESC
-      LIMIT $2`,
-    [term, limit + 1],
+      ORDER BY (CASE WHEN lower(st.normalized_term) = lower($2) THEN 0 ELSE 1 END),
+               (CASE st.source_type
+                  WHEN 'article_number' THEN 1
+                  WHEN 'cas' THEN 2
+                  WHEN 'name' THEN 3
+                  WHEN 'synonym' THEN 4
+                  WHEN 'formula' THEN 5
+                  ELSE 6 END),
+               rank DESC, p.id DESC
+      LIMIT $3`,
+    [term, term, limit + 1],
   );
 
   const hasResults = ftsRows.length > 0;
@@ -47,7 +57,9 @@ export async function searchProducts(
   let usedFuzzyFallback = false;
 
   if (!hasResults) {
-    // Stage 2: trigram fuzzy fallback.
+    // Stage 2: trigram fuzzy fallback. The % operator uses the GIN index, but
+    // an explicit similarity floor (0.35) keeps fuzzy matching from being too
+    // aggressive — "ethanol" must genuinely resemble the term.
     const trigramRows = await rows<FtsRow>(
       `SELECT p.slug, p.name, p.article_number AS "articleNumber", p.summary,
              st.term, st.source_type AS "sourceType",
@@ -58,7 +70,9 @@ export async function searchProducts(
                WHERE product_id = p.id AND is_primary) AS formula
         FROM product_search_terms st
         JOIN products p ON p.id = st.product_id
-       WHERE p.status = 'active' AND st.normalized_term % $1
+       WHERE p.status = 'active'
+         AND st.normalized_term % $1
+         AND similarity(st.normalized_term, $1) >= 0.35
        ORDER BY rank DESC, st.term
        LIMIT $2`,
       [term, limit + 1],

@@ -107,7 +107,7 @@ export function SearchBox({
         className="flex items-center"
       >
         <label htmlFor={id} className="sr-only">
-          Search the DR-Chem catalogue
+          Search the DR Chemicals catalogue
         </label>
         <span
           className={`pointer-events-none absolute left-4 text-ink-400 ${large ? "top-1/2 -translate-y-1/2 h-5 w-5" : "top-1/2 -translate-y-1/2 h-4 w-4"}`}
@@ -126,7 +126,7 @@ export function SearchBox({
           onKeyDown={onKeyDown}
           onBlur={() => setTimeout(() => setOpen(false), 120)}
           placeholder={placeholder}
-          aria-label="Search the DR-Chem catalogue"
+          aria-label="Search the DR Chemicals catalogue"
           aria-expanded={open}
           aria-controls={`${id}-listbox`}
           aria-autocomplete="list"

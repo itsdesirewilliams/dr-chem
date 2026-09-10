@@ -1,5 +1,5 @@
+import { Mail, MessageCircle } from "lucide-react";
 import { whatsappLink } from "@/lib/site";
-import { MailIcon, WhatsAppIcon } from "@/components/icons";
 import { CTA, btn } from "@/components/ui";
 
 /**
@@ -8,7 +8,7 @@ import { CTA, btn } from "@/components/ui";
  * When NEXT_PUBLIC_WHATSAPP_NUMBER is configured this renders a real link to
  * `https://wa.me/<number>?text=<message>`. Until a number is provided it
  * renders the same slot as an email CTA so the button is never dead — and the
- * whole site never fabricates a phone number.
+ * site never fabricates a phone number.
  */
 export function WhatsAppCTA({
   message,
@@ -24,8 +24,12 @@ export function WhatsAppCTA({
   className?: string;
 }) {
   const href = whatsappLink(message);
-  const sizing = size === "lg" ? "h-6 w-6" : size === "sm" ? "h-4 w-4" : "h-5 w-5";
-  const icon = href ? <WhatsAppIcon className={`${sizing} shrink-0`} /> : <MailIcon className={`${sizing} shrink-0`} />;
+  const sizing = size === "lg" ? "h-5 w-5" : size === "sm" ? "h-4 w-4" : "h-[18px] w-[18px]";
+  const icon = href ? (
+    <MessageCircle className={`${sizing} shrink-0`} strokeWidth={2} aria-hidden="true" />
+  ) : (
+    <Mail className={`${sizing} shrink-0`} strokeWidth={2} aria-hidden="true" />
+  );
   const fallbackCls = variant === "secondary" ? btn.secondary : btn.primary;
 
   if (!href) {
@@ -34,7 +38,7 @@ export function WhatsAppCTA({
         href="mailto:marketing@drchem.co.in"
         external
         className={className ?? fallbackCls}
-        aria-label="Contact DR-Chem by email"
+        aria-label="Contact DR Chemicals by email"
       >
         {icon}
         {label}
@@ -65,10 +69,10 @@ export function WhatsAppIconButton({ message, label }: { message?: string; label
     <CTA
       href={href}
       external
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#25D366] text-white shadow-card hover:bg-[#1FC95D]"
+      className="grid h-10 w-10 place-items-center rounded-md bg-[#25D366] text-[#08331D] transition-colors hover:bg-[#1FC95D]"
       aria-label={label}
     >
-      <WhatsAppIcon className="h-6 w-6" />
+      <MessageCircle className="h-5 w-5" aria-hidden="true" />
     </CTA>
   );
 }

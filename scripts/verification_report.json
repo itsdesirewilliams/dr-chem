@@ -1,0 +1,19 @@
+{
+  "source_count": 2908,
+  "database_product_count": 2908,
+  "present_count": 2908,
+  "missing_count": 0,
+  "missing": [],
+  "duplicate_db_article_count": 0,
+  "duplicate_db_article_keys": [],
+  "duplicate_db_product_ids": [],
+  "url_mismatch_count": 0,
+  "url_mismatch_samples": [],
+  "url_catalogue_missing_count": 0,
+  "url_catalogue_missing_samples": [],
+  "identity_problem_count": 0,
+  "identity_problems": [],
+  "missing_category_link_count": 0,
+  "missing_category_links": [],
+  "product_search_terms_total": 33374
+}

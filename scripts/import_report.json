@@ -1,15 +1,398 @@
 {
+  "requested_missing": [
+    "03510",
+    "04130",
+    "04139",
+    "04154",
+    "04160",
+    "04162",
+    "04168",
+    "04180",
+    "04206",
+    "04215",
+    "04230",
+    "04240",
+    "04250",
+    "04270",
+    "04300",
+    "04310",
+    "04320",
+    "04340",
+    "04360",
+    "04361",
+    "04363",
+    "04372",
+    "04373",
+    "04375",
+    "04376",
+    "04377",
+    "04379",
+    "04383",
+    "04390",
+    "04391",
+    "04392",
+    "04395",
+    "04400",
+    "04410",
+    "04411",
+    "04417",
+    "04422",
+    "04423",
+    "04535",
+    "04536",
+    "04571",
+    "04717",
+    "06092"
+  ],
+  "requested_count": 43,
   "counts": {
-    "processed": 12,
-    "inserted": 1,
+    "processed": 2908,
+    "inserted": 43,
     "updated": 0,
-    "skipped": 11,
+    "skipped": 2865,
     "failed": 0
   },
   "errors": [],
-  "warnings": null,
-  "source_dir": "D:\\dev\\loba-extractor\\output\\canonical",
-  "batch_size": 100,
-  "limit": 12,
-  "driver": "psycopg3"
+  "warnings": [
+    {
+      "article_no": "03510",
+      "warning": "packing 00005: unparseable numeric value '5 g'"
+    },
+    {
+      "article_no": "04130",
+      "warning": "packing 00100: unparseable numeric value '100 g'"
+    },
+    {
+      "article_no": "04130",
+      "warning": "packing 00500: unparseable numeric value '500 g'"
+    },
+    {
+      "article_no": "04139",
+      "warning": "packing 00500: unparseable numeric value '500 ml'"
+    },
+    {
+      "article_no": "04139",
+      "warning": "packing 02500: unparseable numeric value '2500 ml'"
+    },
+    {
+      "article_no": "04154",
+      "warning": "packing 00500: unparseable numeric value '500 ml'"
+    },
+    {
+      "article_no": "04154",
+      "warning": "packing 02500: unparseable numeric value '2500 ml'"
+    },
+    {
+      "article_no": "04160",
+      "warning": "packing 00100: unparseable numeric value '100 g'"
+    },
+    {
+      "article_no": "04160",
+      "warning": "packing 00500: unparseable numeric value '500 g'"
+    },
+    {
+      "article_no": "04162",
+      "warning": "packing 00025: unparseable numeric value '25 g'"
+    },
+    {
+      "article_no": "04162",
+      "warning": "packing 00100: unparseable numeric value '100 g'"
+    },
+    {
+      "article_no": "04168",
+      "warning": "packing 00250: unparseable numeric value '250 g'"
+    },
+    {
+      "article_no": "04180",
+      "warning": "packing 00025: unparseable numeric value '25 g'"
+    },
+    {
+      "article_no": "04180",
+      "warning": "packing 00100: unparseable numeric value '100 g'"
+    },
+    {
+      "article_no": "04180",
+      "warning": "packing 01000: unparseable numeric value '1000 g'"
+    },
+    {
+      "article_no": "04206",
+      "warning": "packing 0250M: unparseable numeric value '250 mg'"
+    },
+    {
+      "article_no": "04206",
+      "warning": "packing 00001: unparseable numeric value '1 g'"
+    },
+    {
+      "article_no": "04215",
+      "warning": "packing 00005: unparseable numeric value '5 g'"
+    },
+    {
+      "article_no": "04215",
+      "warning": "packing 00025: unparseable numeric value '25 g'"
+    },
+    {
+      "article_no": "04215",
+      "warning": "packing 01000: unparseable numeric value '1000 g'"
+    },
+    {
+      "article_no": "04230",
+      "warning": "packing 00010: unparseable numeric value '10 g'"
+    },
+    {
+      "article_no": "04230",
+      "warning": "packing 00025: unparseable numeric value '25 g'"
+    },
+    {
+      "article_no": "04240",
+      "warning": "packing 00025: unparseable numeric value '25 g'"
+    },
+    {
+      "article_no": "04240",
+      "warning": "packing 00100: unparseable numeric value '100 g'"
+    },
+    {
+      "article_no": "04250",
+      "warning": "packing 00010: unparseable numeric value '10 g'"
+    },
+    {
+      "article_no": "04250",
+      "warning": "packing 00100: unparseable numeric value '100 g'"
+    },
+    {
+      "article_no": "04270",
+      "warning": "packing 01000: unparseable numeric value '1000 g'"
+    },
+    {
+      "article_no": "04270",
+      "warning": "packing 0010K: unparseable numeric value '10 Kg'"
+    },
+    {
+      "article_no": "04300",
+      "warning": "packing 00005: unparseable numeric value '5 g'"
+    },
+    {
+      "article_no": "04300",
+      "warning": "packing 00025: unparseable numeric value '25 g'"
+    },
+    {
+      "article_no": "04310",
+      "warning": "packing 00500: unparseable numeric value '500 ml'"
+    },
+    {
+      "article_no": "04310",
+      "warning": "packing 02500: unparseable numeric value '2500 ml'"
+    },
+    {
+      "article_no": "04310",
+      "warning": "packing 0025K: unparseable numeric value '25 Liters'"
+    },
+    {
+      "article_no": "04310",
+      "warning": "packing 0200K: unparseable numeric value '200 Liters'"
+    },
+    {
+      "article_no": "04320",
+      "warning": "invalid CAS format: 'NA'"
+    },
+    {
+      "article_no": "04320",
+      "warning": "packing 00500: unparseable numeric value '500 ml'"
+    },
+    {
+      "article_no": "04320",
+      "warning": "packing 02500: unparseable numeric value '2500 ml'"
+    },
+    {
+      "article_no": "04340",
+      "warning": "packing 00100: unparseable numeric value '100 g'"
+    },
+    {
+      "article_no": "04360",
+      "warning": "packing 01000: unparseable numeric value '1000 g'"
+    },
+    {
+      "article_no": "04360",
+      "warning": "packing 02500: unparseable numeric value '2500 g'"
+    },
+    {
+      "article_no": "04360",
+      "warning": "packing 05000: unparseable numeric value '5000 g'"
+    },
+    {
+      "article_no": "04361",
+      "warning": "packing 00500: unparseable numeric value '500 g'"
+    },
+    {
+      "article_no": "04363",
+      "warning": "packing 00250: unparseable numeric value '250 g'"
+    },
+    {
+      "article_no": "04372",
+      "warning": "packing 00500: unparseable numeric value '500 g'"
+    },
+    {
+      "article_no": "04373",
+      "warning": "packing 00250: unparseable numeric value '250 g'"
+    },
+    {
+      "article_no": "04375",
+      "warning": "packing 00500: unparseable numeric value '500 g'"
+    },
+    {
+      "article_no": "04375",
+      "warning": "packing 01000: unparseable numeric value '1000 g'"
+    },
+    {
+      "article_no": "04376",
+      "warning": "packing 00250: unparseable numeric value '250 g'"
+    },
+    {
+      "article_no": "04377",
+      "warning": "packing 00500: unparseable numeric value '500 g'"
+    },
+    {
+      "article_no": "04377",
+      "warning": "packing 05000: unparseable numeric value '5000 g'"
+    },
+    {
+      "article_no": "04377",
+      "warning": "packing 0025K: unparseable numeric value '25 Kg'"
+    },
+    {
+      "article_no": "04377",
+      "warning": "packing 0050K: unparseable numeric value '50 Kg'"
+    },
+    {
+      "article_no": "04379",
+      "warning": "packing 00500: unparseable numeric value '500 g'"
+    },
+    {
+      "article_no": "04383",
+      "warning": "packing 00500: unparseable numeric value '500 g'"
+    },
+    {
+      "article_no": "04390",
+      "warning": "packing 00025: unparseable numeric value '25 g'"
+    },
+    {
+      "article_no": "04390",
+      "warning": "packing 00100: unparseable numeric value '100 g'"
+    },
+    {
+      "article_no": "04390",
+      "warning": "packing 01000: unparseable numeric value '1000 g'"
+    },
+    {
+      "article_no": "04391",
+      "warning": "invalid CAS format: 'NA'"
+    },
+    {
+      "article_no": "04391",
+      "warning": "packing 00250: unparseable numeric value '250 ml'"
+    },
+    {
+      "article_no": "04391",
+      "warning": "packing 02500: unparseable numeric value '2500 ml'"
+    },
+    {
+      "article_no": "04392",
+      "warning": "invalid CAS format: 'NA'"
+    },
+    {
+      "article_no": "04392",
+      "warning": "packing 00250: unparseable numeric value '250 ml'"
+    },
+    {
+      "article_no": "04395",
+      "warning": "packing 00025: unparseable numeric value '25 g'"
+    },
+    {
+      "article_no": "04395",
+      "warning": "packing 00100: unparseable numeric value '100 g'"
+    },
+    {
+      "article_no": "04395",
+      "warning": "packing 01000: unparseable numeric value '1000 g'"
+    },
+    {
+      "article_no": "04400",
+      "warning": "packing 00010: unparseable numeric value '10 g'"
+    },
+    {
+      "article_no": "04400",
+      "warning": "packing 00025: unparseable numeric value '25 g'"
+    },
+    {
+      "article_no": "04410",
+      "warning": "packing 00025: unparseable numeric value '25 g'"
+    },
+    {
+      "article_no": "04410",
+      "warning": "packing 00100: unparseable numeric value '100 g'"
+    },
+    {
+      "article_no": "04411",
+      "warning": "invalid CAS format: 'NA'"
+    },
+    {
+      "article_no": "04411",
+      "warning": "packing 00250: unparseable numeric value '250 ml'"
+    },
+    {
+      "article_no": "04417",
+      "warning": "packing 00250: unparseable numeric value '250 ml'"
+    },
+    {
+      "article_no": "04417",
+      "warning": "packing 01000: unparseable numeric value '1000 ml'"
+    },
+    {
+      "article_no": "04422",
+      "warning": "packing 00250: unparseable numeric value '250 g'"
+    },
+    {
+      "article_no": "04423",
+      "warning": "packing 00250: unparseable numeric value '250 g'"
+    },
+    {
+      "article_no": "04535",
+      "warning": "invalid CAS format: 'NA'"
+    },
+    {
+      "article_no": "04535",
+      "warning": "packing 00025: unparseable numeric value '25 g'"
+    },
+    {
+      "article_no": "04536",
+      "warning": "invalid CAS format: 'NA'"
+    },
+    {
+      "article_no": "04536",
+      "warning": "packing 00125: unparseable numeric value '125 ml'"
+    },
+    {
+      "article_no": "04571",
+      "warning": "packing 00050: unparseable numeric value '50 g'"
+    },
+    {
+      "article_no": "04571",
+      "warning": "packing 00100: unparseable numeric value '100 g'"
+    },
+    {
+      "article_no": "04571",
+      "warning": "packing 00250: unparseable numeric value '250 g'"
+    },
+    {
+      "article_no": "04717",
+      "warning": "packing 00500: unparseable numeric value '500 g'"
+    },
+    {
+      "article_no": "04717",
+      "warning": "packing 00050: unparseable numeric value '50 g'"
+    },
+    {
+      "article_no": "06092",
+      "warning": "packing 00500: unparseable numeric value '500 g'"
+    }
+  ]
 }

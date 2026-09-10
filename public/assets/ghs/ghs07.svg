@@ -1,0 +1,10 @@
+<!-- GHS07 – Exclamation mark (UN GHS, public domain) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <polygon points="50,5 95,50 50,95 5,50" fill="none" stroke="#C22" stroke-width="4"/>
+  <polygon points="50,10 90,50 50,90 10,50" fill="#FFF"/>
+  <!-- Exclamation mark -->
+  <rect x="44" y="28" width="12" height="34" rx="4" fill="#000"/>
+  <rect x="46" y="28" width="8" height="22" rx="3" fill="#000"/>
+  <!-- Dot -->
+  <ellipse cx="50" cy="70" rx="5" ry="5" fill="#000"/>
+</svg>

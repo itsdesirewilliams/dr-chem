@@ -4,12 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
-  CloseIcon,
-  MenuIcon,
-  SearchIcon,
-  WhatsAppIcon,
-  LinkedInIcon,
-} from "@/components/icons";
+  ChevronRight,
+  Linkedin,
+  Mail,
+  Menu,
+  MessageCircle,
+  Search,
+  X,
+} from "lucide-react";
 import { whatsappLink, LINKEDIN_URL, CONTACT_EMAIL } from "@/lib/site";
 
 const NAV = [
@@ -20,9 +22,9 @@ const NAV = [
 ];
 
 /**
- * Compact premium header — mobile-first.
- *  - mobile: logo + search trigger + hamburger; slide-over menu.
- *  - desktop: horizontal nav + inline search + WhatsApp pill.
+ * Corporate header — architectural and compact.
+ *  - mobile: lockup + search + menu; slide-over panel.
+ *  - desktop: quiet underline navigation, catalogue search, ink Enquire CTA.
  */
 export function Header() {
   const pathname = usePathname();
@@ -39,72 +41,73 @@ export function Header() {
     };
   }, [menuOpen]);
 
-  const wa = whatsappLink("Hello DR-Chem, I have an enquiry.");
+  const openSearch = () =>
+    window.dispatchEvent(new CustomEvent("drchem:search-open"));
 
   return (
-    <header className="sticky top-0 z-40 border-b border-ink-100 bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-ink-200/70 bg-paper-100/90 backdrop-blur">
       <div className="container-site">
-        <div className="flex h-16 items-center justify-between gap-3">
-          <BrandLink />
+        <div className="flex h-14 items-center justify-between gap-4 md:h-16">
+          <BrandLockup />
 
-          <nav
-            aria-label="Primary"
-            className="hidden items-center gap-1 text-[15px] font-medium md:flex"
-          >
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`rounded-lg px-3 py-2 transition-colors ${
-                  pathname === item.href || pathname.startsWith(item.href + "/")
-                    ? "bg-jade-50 text-jade-800"
-                    : "text-ink-700 hover:bg-jade-50 hover:text-jade-800"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <nav aria-label="Primary" className="hidden items-center gap-7 lg:flex">
+            {NAV.map((item) => {
+              const active =
+                pathname === item.href || pathname.startsWith(item.href + "/");
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`relative py-5 text-[14.5px] font-medium transition-colors ${
+                    active ? "text-jade-800" : "text-ink-600 hover:text-ink-900"
+                  }`}
+                >
+                  {item.label}
+                  <span
+                    aria-hidden="true"
+                    className={`absolute inset-x-0 bottom-0 h-0.5 transition-colors ${
+                      active ? "bg-jade-600" : "bg-transparent"
+                    }`}
+                  />
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => window.dispatchEvent(new CustomEvent("drchem:search-open"))}
-              aria-label="Open search"
-              className="hidden h-11 w-11 items-center justify-center rounded-lg text-ink-500 hover:bg-jade-50 hover:text-jade-700 md:flex"
+              onClick={openSearch}
+              aria-label="Search the catalogue"
+              className="hidden h-10 w-10 place-items-center rounded-md border border-ink-300 text-ink-600 transition-colors hover:border-jade-600 hover:text-jade-700 lg:grid"
             >
-              <SearchIcon className="h-5 w-5" />
+              <Search className="h-[18px] w-[18px]" aria-hidden="true" />
             </button>
 
-            {wa ? (
-              <a
-                href={wa}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden items-center gap-1.5 rounded-lg bg-[#25D366] px-3 py-2 text-[13.5px] font-semibold text-[#0B3B24] hover:bg-[#1FC95D] lg:flex"
-              >
-                <WhatsAppIcon className="h-4 w-4" />
-                WhatsApp
-              </a>
-            ) : null}
+            <Link
+              href="/contact"
+              className="hidden h-10 items-center rounded-md bg-ink-900 px-4 text-[14px] font-medium text-white transition-colors hover:bg-ink-800 md:inline-flex"
+            >
+              Enquire
+            </Link>
 
-            <div className="flex items-center gap-1.5 md:hidden">
+            <div className="flex items-center lg:hidden">
               <button
                 type="button"
-                onClick={() => window.dispatchEvent(new CustomEvent("drchem:search-open"))}
-                aria-label="Open search"
-                className="flex h-11 w-11 items-center justify-center rounded-lg border border-ink-100 text-ink-600"
+                onClick={openSearch}
+                aria-label="Search the catalogue"
+                className="grid h-11 w-11 place-items-center text-ink-600 transition-colors hover:text-jade-700"
               >
-                <SearchIcon className="h-5 w-5" />
+                <Search className="h-5 w-5" aria-hidden="true" />
               </button>
               <button
                 type="button"
                 onClick={() => setMenuOpen(true)}
                 aria-label="Open menu"
                 aria-expanded={menuOpen}
-                className="flex h-11 w-11 items-center justify-center rounded-lg bg-jade-600 text-white"
+                className="grid h-11 w-11 place-items-center text-ink-900"
               >
-                <MenuIcon className="h-5 w-5" />
+                <Menu className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -116,104 +119,102 @@ export function Header() {
   );
 }
 
-function BrandLink() {
+function BrandLockup() {
   return (
     <Link
       href="/"
-      aria-label="DR-Chem home"
-      className="flex items-center gap-2 focus-visible:outline focus-visible:outline-2"
+      aria-label="DR Chemicals home"
+      className="flex items-center gap-2.5 focus-visible:outline focus-visible:outline-2"
     >
       <span
-        className="flex h-9 w-9 items-center justify-center rounded-lg bg-jade-600 text-white"
         aria-hidden="true"
+        className="grid h-9 w-9 place-items-center rounded-[5px] bg-jade-700 font-serif text-[15px] font-semibold text-white"
       >
-        <svg
-          viewBox="0 0 24 24"
-          className="h-5 w-5"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        >
-          <path d="M12 3 L12 9 L10 9 L10 12 C8.6 13.4 8 15 9 16 L11 16 L12 14 L14 12 Q15 10.4 16 8.8 L12 3 Z M12 12 L5 12" />
-        </svg>
+        DR
       </span>
       <span className="flex flex-col leading-none">
-        <span className="text-[17px] font-bold tracking-tight text-ink-900">DR-Chem</span>
-        <span className="text-[10.5px] font-medium uppercase tracking-[0.14em] text-jade-700">
-          Chemical Solutions
+        <span className="text-[16.5px] font-semibold tracking-tight text-ink-900">
+          DR Chemicals
+        </span>
+        <span className="mt-1 text-[10px] font-medium uppercase leading-none tracking-[0.16em] text-ink-500">
+          Laboratory Chemicals
         </span>
       </span>
     </Link>
   );
 }
 function MenuSheet({ onClose }: { onClose: () => void }) {
-  const wa = whatsappLink("Hello DR-Chem, I have an enquiry.");
+  const wa = whatsappLink("Hello DR Chemicals, I have an enquiry.");
   return (
     <div role="dialog" aria-modal="true" aria-label="Site menu" className="fixed inset-0 z-50">
       <button
         type="button"
         aria-label="Close menu"
         onClick={onClose}
-        className="absolute inset-0 bg-ink-950/40"
+        className="absolute inset-0 bg-ink-950/50"
       />
-      <div className="absolute inset-y-0 right-0 flex w-[86%] max-w-md flex-col bg-white shadow-card-lg">
-        <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4">
-          <p className="font-serif text-xl font-semibold text-ink-900">Menu</p>
+      <div className="absolute inset-y-0 right-0 flex w-[86%] max-w-sm flex-col bg-paper-50 shadow-card-lg">
+        <div className="flex items-center justify-between border-b border-ink-200 px-5 py-3.5">
+          <span className="text-[15px] font-semibold tracking-tight text-ink-900">
+            Menu
+          </span>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close menu"
-            className="flex h-11 w-11 items-center justify-center rounded-lg text-ink-600 hover:bg-jade-50"
+            className="grid h-11 w-11 place-items-center text-ink-500 transition-colors hover:text-ink-900"
           >
-            <CloseIcon className="h-5 w-5" />
+            <X className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
 
-        <nav aria-label="Primary mobile" className="flex flex-col px-5 pt-2">
+        <nav aria-label="Primary mobile" className="flex flex-col px-5">
           {[{ href: "/", label: "Home" }, ...NAV].map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={onClose}
-              className="flex min-h-[52px] items-center justify-between border-b border-ink-100 px-2 text-[17px] font-medium text-ink-800"
+              className="flex min-h-[54px] items-center justify-between border-b border-ink-100 text-[16px] font-medium text-ink-800 transition-colors hover:text-jade-700"
             >
               {item.label}
-              <span aria-hidden="true" className="text-ink-300">›</span>
+              <ChevronRight className="h-4 w-4 text-ink-300" aria-hidden="true" />
             </Link>
           ))}
         </nav>
 
-        <div className="mt-6 flex flex-col gap-3 px-5">
+        <div className="flex flex-col gap-2.5 px-5 pt-6">
           {wa ? (
             <a
               href={wa}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-lg bg-[#25D366] text-[15px] font-semibold text-[#0B3B24]"
+              className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-md bg-[#25D366] text-[15px] font-medium text-[#08331D]"
             >
-              <WhatsAppIcon className="h-5 w-5" /> Chat on WhatsApp
+              <MessageCircle className="h-[18px] w-[18px]" aria-hidden="true" />
+              Chat on WhatsApp
             </a>
           ) : null}
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-lg border border-ink-200 text-[15px] font-semibold text-ink-800"
+            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-md border border-ink-300 text-[15px] font-medium text-ink-800 transition-colors hover:border-jade-600 hover:text-jade-700"
           >
+            <Mail className="h-[18px] w-[18px]" aria-hidden="true" />
             Email us
           </a>
           <a
             href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-lg border border-ink-200 text-[15px] font-semibold text-ink-800"
+            className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-md border border-ink-300 text-[15px] font-medium text-ink-800 transition-colors hover:border-jade-600 hover:text-jade-700"
           >
-            <LinkedInIcon className="h-5 w-5" /> Follow on LinkedIn
+            <Linkedin className="h-[18px] w-[18px]" aria-hidden="true" />
+            Follow on LinkedIn
           </a>
         </div>
 
-        <p className="mt-5 px-5 text-[12.5px] leading-relaxed text-ink-400">
-          DR-Chem · Chemical & laboratory products. Industrial, agricultural,
-          mining and water-treatment chemicals.
+        <p className="mt-auto px-5 pb-6 pt-6 text-[12px] leading-relaxed text-ink-400">
+          DR CHEMICALS — industrial, agricultural, mining and water-treatment
+          chemicals, organised as a searchable technical catalogue.
         </p>
       </div>
     </div>

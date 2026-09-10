@@ -74,8 +74,8 @@ const config: Config = {
         xl2: "1.25rem",
       },
       boxShadow: {
-        card: "0 1px 3px rgba(16,24,30,.08), 0 6px 16px rgba(16,24,30,.06)",
-        "card-lg": "0 2px 6px rgba(16,24,30,.10), 0 14px 28px rgba(16,24,30,.08)",
+        card: "0 1px 2px rgba(16,24,30,.05)",
+        "card-lg": "0 12px 32px -16px rgba(16,24,30,.18)",
         focus: "0 0 0 3px rgba(30,115,96,.28)",
       },
       maxWidth: {

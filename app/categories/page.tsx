@@ -8,22 +8,22 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Categories",
   description:
-    "Browse DR-Chem products by category — industrial, agricultural, mining and water-treatment chemicals.",
+    "Browse DR Chemicals products by category — industrial, agricultural, mining and water-treatment chemicals.",
 };
 
 export default async function CategoriesPage() {
   const tree = await getCategoryTree();
 
   return (
-    <div className="container-site py-10">
+    <div className="container-site py-10 lg:py-14">
       <SectionHeading
-        eyebrow="Catalogue"
+        eyebrow="Catalogue index"
         title="Browse by category"
         lead="Category pages group products by chemical family and application area."
       />
 
       {tree.length === 0 ? (
-        <div className="mt-8">
+        <div className="mt-10">
           <EmptyState
             title="Categories are being organised"
             message="The product catalogue is live and searchable; categories will appear here as they are assigned."
@@ -31,27 +31,30 @@ export default async function CategoriesPage() {
           />
         </div>
       ) : (
-        <div className="mt-8 space-y-10">
+        <div className="mt-12 space-y-12">
           {tree.map((parent) => (
             <section key={parent.slug} aria-labelledby={`cat-${parent.slug}`}>
-              <div className="flex items-baseline gap-2">
-                <h2 id={`cat-${parent.slug}`} className="text-xl font-semibold text-ink-900">
-                  <Link href={`/categories/${parent.slug}`} className="hover:text-jade-700 hover:underline">
+              <div className="flex items-baseline justify-between gap-4 border-b border-ink-900 pb-2">
+                <h2 id={`cat-${parent.slug}`} className="text-[18px] font-semibold tracking-tight text-ink-900">
+                  <Link
+                    href={`/categories/${parent.slug}`}
+                    className="transition-colors hover:text-jade-800"
+                  >
                     {parent.name}
                   </Link>
                 </h2>
-                <span className="text-[13px] text-ink-500">
+                <span className="tnum shrink-0 text-[12.5px] text-ink-500">
                   {parent.productCount} product{parent.productCount === 1 ? "" : "s"}
                 </span>
               </div>
               {parent.children.length > 0 ? (
-                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div>
                   {parent.children.map((child) => (
                     <CategoryCard key={child.slug} category={child} />
                   ))}
                 </div>
               ) : (
-                <div className="mt-4">
+                <div>
                   <CategoryCard category={parent} />
                 </div>
               )}
