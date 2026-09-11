@@ -115,10 +115,11 @@ function Hero() {
           formula, synonym or article number.
         </p>
 
-        <div className="mt-8 max-w-2xl rounded-md border border-ink-700 bg-paper-50 p-2 shadow-card-lg">
+        <div className="mt-8 max-w-2xl rounded-md border border-ink-700 bg-white p-2 shadow-card-lg">
           <SearchBox
             id="hero-search"
             large
+            tone="hero"
             placeholder="e.g. Ethanol, 64-17-5, C₂H₆O, CD-00123"
           />
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-2 pb-1.5 pt-2.5 text-[11px] font-medium uppercase tracking-[0.12em] text-ink-400">

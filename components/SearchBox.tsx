@@ -9,18 +9,25 @@ import type { SuggestedTerm } from "@/lib/types";
  * Prominent chemical search — mobile-first.
  * Debounced type-ahead against /api/search (FTS + trigram + prefix over
  * product_search_terms), with keyboard support and one-hand-friendly sizing.
+ * A visible submit button submits the current query; Enter does the same.
+ * `tone="hero"` renders a borderless field that sits flush inside the dark
+ * hero's white search module (one intentional light block), while the
+ * default `"paper"` tone keeps the standalone bordered field used on light
+ * surfaces (search overlay).
  */
 export function SearchBox({
   id = "site-search",
   autoFocus = false,
   placeholder = "Search by product, CAS, formula, article no.…",
   large = false,
+  tone = "paper",
   onNavigated,
 }: {
   id?: string;
   autoFocus?: boolean;
   placeholder?: string;
   large?: boolean;
+  tone?: "paper" | "hero";
   onNavigated?: () => void;
 }) {
   const router = useRouter();
@@ -131,11 +138,25 @@ export function SearchBox({
           aria-controls={`${id}-listbox`}
           aria-autocomplete="list"
           role="combobox"
-          className={`w-full rounded-xl border border-ink-200 bg-white py-3.5 pl-11 pr-4 text-[16px] text-ink-900 placeholder:text-ink-400 shadow-sm focus:border-jade-500 focus:ring-2 focus:ring-jade-400/30 ${large ? "h-13 text-lg" : "h-11"}`}
+          className={`min-w-0 flex-1 ${
+            tone === "hero"
+              ? "rounded-md border-0 bg-transparent py-3.5 pl-11 pr-4 text-[16px] text-ink-900 placeholder:text-ink-400 focus:ring-2 focus:ring-jade-400/30"
+              : "rounded-xl border border-ink-200 bg-white py-3.5 pl-11 pr-4 text-[16px] text-ink-900 placeholder:text-ink-400 shadow-sm focus:border-jade-500 focus:ring-2 focus:ring-jade-400/30"
+          } ${large ? "h-13 text-lg" : "h-11"}`}
         />
         {loading ? (
-          <span className="absolute right-4 h-4 w-4 animate-spin rounded-full border-2 border-jade-500 border-t-transparent" aria-hidden="true" />
+          <span
+            className="mr-2 h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-jade-500 border-t-transparent"
+            aria-hidden="true"
+          />
         ) : null}
+        <button
+          type="submit"
+          aria-label="Submit search"
+          className="ml-2 grid shrink-0 self-stretch place-items-center rounded-lg bg-jade-700 px-3.5 text-white transition-colors hover:bg-jade-800"
+        >
+          <SearchIcon className="h-5 w-5" aria-hidden="true" />
+        </button>
       </form>
 
       {open && suggestions.length > 0 ? (

@@ -54,7 +54,13 @@ export function SearchOverlay() {
           Search by product name, CAS number, molecular formula, synonym or
           article number.
         </p>
-        <SearchBox id="overlay-search" autoFocus placeholder="e.g. Ethanol, 64-17-5, C₂H₆O, CD-00123" large />
+        <SearchBox
+          id="overlay-search"
+          autoFocus
+          placeholder="e.g. Ethanol, 64-17-5, C₂H₆O, CD-00123"
+          large
+          onNavigated={() => setOpen(false)}
+        />
         <div className="mt-8 space-y-1 rounded-xl border border-ink-100 bg-paper-100 p-4">
           <p className="text-[13px] font-semibold text-ink-600">Popular lookups</p>
           <div className="mt-2 flex flex-wrap gap-2">

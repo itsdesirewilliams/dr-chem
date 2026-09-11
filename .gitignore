@@ -17,6 +17,9 @@ data/uploads/
 
 coverage/
 
+# TypeScript incremental build cache
+tsconfig.tsbuildinfo
+
 # Supabase CLI local artifacts (created by `supabase link` / local stack)
 supabase/.branches/
 supabase/.temp/

@@ -8,6 +8,10 @@ import type { SearchPage, SearchResultItem, SuggestedTerm } from "@/lib/types";
  *   2. Stage 2 — trigram fuzzy fallback (pg_trgm similarity) when Stage 1
  *      is empty.
  *   3. Stage 3 — "did you mean" term suggestions (same trigram index).
+ *
+ * Catalogue visibility mirrors lib/products.ts: the imported catalogue rows
+ * are the public catalogue (no status='active' predicate), so search, the
+ * product listing, and category counts always agree on the same set.
  */
 
 export const FTS_FALLBACK_THRESHOLD = 5;
@@ -37,8 +41,7 @@ export async function searchProducts(
               WHERE product_id = p.id AND is_primary) AS formula
        FROM product_search_terms st
        JOIN products p ON p.id = st.product_id
-      WHERE p.status = 'active'
-        AND st.search_vector @@ plainto_tsquery(st.ts_config, $1)
+      WHERE st.search_vector @@ plainto_tsquery(st.ts_config, $1)
       ORDER BY (CASE WHEN lower(st.normalized_term) = lower($2) THEN 0 ELSE 1 END),
                (CASE st.source_type
                   WHEN 'article_number' THEN 1
@@ -70,8 +73,7 @@ export async function searchProducts(
                WHERE product_id = p.id AND is_primary) AS formula
         FROM product_search_terms st
         JOIN products p ON p.id = st.product_id
-       WHERE p.status = 'active'
-         AND st.normalized_term % $1
+       WHERE st.normalized_term % $1
          AND similarity(st.normalized_term, $1) >= 0.35
        ORDER BY rank DESC, st.term
        LIMIT $2`,
@@ -90,8 +92,7 @@ export async function searchProducts(
     `SELECT COUNT(DISTINCT p.id) AS n
        FROM product_search_terms st
        JOIN products p ON p.id = st.product_id
-      WHERE p.status = 'active'
-        AND st.search_vector @@ plainto_tsquery(st.ts_config, $1)`,
+      WHERE st.search_vector @@ plainto_tsquery(st.ts_config, $1)`,
     [term],
   );
 
@@ -155,8 +156,7 @@ export async function suggestTerms(
                   ELSE 1 END)::float8 AS rk
        FROM product_search_terms st
        JOIN products p ON p.id = st.product_id
-      WHERE p.status = 'active'
-        AND (st.normalized_term ILIKE $1 || '%'
+      WHERE (st.normalized_term ILIKE $1 || '%'
              OR st.term ILIKE $2 || '%'
              OR st.normalized_term % $2)
       ORDER BY rk, st.weight DESC, st.term

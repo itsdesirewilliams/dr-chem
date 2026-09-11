@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Linkedin, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import { WhatsAppIcon } from "@/components/icons";
 import {
   SITE_NAME,
   CONTACT_EMAIL,
@@ -35,7 +36,7 @@ export default function ContactPage() {
             value: "Chat with our team",
             href: wa,
             external: true,
-            icon: MessageCircle,
+            icon: WhatsAppIcon,
           },
         ]
       : []),

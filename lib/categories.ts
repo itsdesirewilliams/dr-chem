@@ -11,8 +11,12 @@ interface CategoryRow {
 }
 
 /**
- * Full active category tree, each node carrying a live count of *active*
- * products (mirroring the RLS public-read stance).
+ * Full active category tree, each node carrying a live count of catalogue
+ * products. Counts mirror lib/products.ts visibility (imported rows are the
+ * catalogue — no status='active' predicate), so a category counter always
+ * matches the product listing on the category page. Parent nodes aggregate
+ * their descendant subtrees without double-counting a product that appears
+ * in several descendant categories.
  */
 export async function getCategoryTree(): Promise<CategoryNode[]> {
   const raw = await rows<CategoryRow>(
@@ -21,14 +25,14 @@ export async function getCategoryTree(): Promise<CategoryNode[]> {
        UNION ALL
        SELECT c.id, s.root
          FROM categories c
-         JOIN sub s ON c.parent_id = s.root
+         JOIN sub s ON c.parent_id = s.id
         WHERE c.is_active
      )
      SELECT c.id, c.slug, c.name, c.description, c.parent_id,
-            (SELECT COUNT(*)::int FROM product_categories pc
-              JOIN products p ON p.id = pc.product_id
-             WHERE p.status = 'active'
-               AND pc.category_id IN (SELECT id FROM sub WHERE root = c.id)
+            (SELECT COUNT(DISTINCT pc.product_id)::int
+               FROM product_categories pc
+               JOIN products p ON p.id = pc.product_id
+              WHERE pc.category_id IN (SELECT id FROM sub WHERE root = c.id)
             ) AS "productCount"
        FROM categories c
       WHERE c.is_active

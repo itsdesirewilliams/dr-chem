@@ -1,4 +1,5 @@
-import { Mail, MessageCircle } from "lucide-react";
+import { Mail } from "lucide-react";
+import { WhatsAppIcon } from "@/components/icons";
 import { whatsappLink } from "@/lib/site";
 import { CTA, btn } from "@/components/ui";
 
@@ -26,7 +27,7 @@ export function WhatsAppCTA({
   const href = whatsappLink(message);
   const sizing = size === "lg" ? "h-5 w-5" : size === "sm" ? "h-4 w-4" : "h-[18px] w-[18px]";
   const icon = href ? (
-    <MessageCircle className={`${sizing} shrink-0`} strokeWidth={2} aria-hidden="true" />
+    <WhatsAppIcon className={`${sizing} shrink-0`} aria-hidden="true" />
   ) : (
     <Mail className={`${sizing} shrink-0`} strokeWidth={2} aria-hidden="true" />
   );
@@ -72,7 +73,7 @@ export function WhatsAppIconButton({ message, label }: { message?: string; label
       className="grid h-10 w-10 place-items-center rounded-md bg-[#25D366] text-[#08331D] transition-colors hover:bg-[#1FC95D]"
       aria-label={label}
     >
-      <MessageCircle className="h-5 w-5" aria-hidden="true" />
+      <WhatsAppIcon className="h-5 w-5" aria-hidden="true" />
     </CTA>
   );
 }

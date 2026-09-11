@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Linkedin, Mail, MessageCircle, Phone } from "lucide-react";
+import { Linkedin, Mail, Phone } from "lucide-react";
+import { WhatsAppIcon } from "@/components/icons";
 import {
   ADDRESS_LINES,
   COMPANY_LEGAL_NAME,
@@ -54,7 +55,7 @@ export function Footer({ categories = [] }: { categories?: CategoryNode[] }) {
                   aria-label="Chat with DR Chemicals on WhatsApp"
                   className="grid h-10 w-10 place-items-center rounded-md border border-ink-700 text-ink-300 transition-colors hover:border-jade-500 hover:text-jade-300"
                 >
-                  <MessageCircle className="h-5 w-5" aria-hidden="true" />
+                  <WhatsAppIcon className="h-5 w-5" aria-hidden="true" />
                 </a>
               ) : null}
               <a

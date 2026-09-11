@@ -8,10 +8,10 @@ import {
   Linkedin,
   Mail,
   Menu,
-  MessageCircle,
   Search,
   X,
 } from "lucide-react";
+import { WhatsAppIcon } from "@/components/icons";
 import { whatsappLink, LINKEDIN_URL, CONTACT_EMAIL } from "@/lib/site";
 
 const NAV = [
@@ -190,7 +190,7 @@ function MenuSheet({ onClose }: { onClose: () => void }) {
               rel="noopener noreferrer"
               className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-md bg-[#25D366] text-[15px] font-medium text-[#08331D]"
             >
-              <MessageCircle className="h-[18px] w-[18px]" aria-hidden="true" />
+              <WhatsAppIcon className="h-[18px] w-[18px]" aria-hidden="true" />
               Chat on WhatsApp
             </a>
           ) : null}

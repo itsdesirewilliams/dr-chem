@@ -1,4 +1,5 @@
-import { Linkedin, MessageCircle } from "lucide-react";
+import { Linkedin } from "lucide-react";
+import { WhatsAppIcon } from "@/components/icons";
 import type { TeamMember } from "@/app/data/team";
 
 /**
@@ -66,7 +67,7 @@ export function TeamCard({ member }: { member: TeamMember }) {
             aria-label={`Message ${member.name} on WhatsApp`}
             className="grid h-9 w-9 place-items-center rounded-md border border-ink-200 text-[#1FA855] transition-colors hover:border-[#1FA855]/50 hover:bg-[#1FA855]/5"
           >
-            <MessageCircle className="h-4 w-4" aria-hidden="true" />
+            <WhatsAppIcon className="h-4 w-4" aria-hidden="true" />
           </a>
         </div>
       </div>
