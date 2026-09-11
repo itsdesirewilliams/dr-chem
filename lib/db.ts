@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import { Pool, type PoolClient } from "pg";
 
 /**
  * Thin PostgreSQL access layer.
@@ -26,7 +26,12 @@ function pool(): Pool {
 
   globalForDb.__drChemPool = new Pool({
     connectionString,
-    max: 10,
+    // Supabase direct connections cap at max_connections=60 (57 usable). Every
+    // serverless instance gets its own pool, so a large per-instance max lets a
+    // handful of Lambda invocations exhaust the shared ceiling. Queries are
+    // short and multi-statement work is scoped to a single client below, so a
+    // small per-instance pool is ample.
+    max: 5,
     idleTimeoutMillis: 30_000,
     connectionTimeoutMillis: 10_000,
     // In Next.js dev, modules re-load: keep a single pool per process.
@@ -75,6 +80,55 @@ export async function execute(
   try {
     const result = await client.query(text, params);
     return result.rowCount ?? 0;
+  } finally {
+    client.release();
+  }
+}
+
+/**
+ * Scoped query runner bound to ONE pooled connection.
+ *
+ * `rows()`/`one()` above acquire a client per query, so firing many queries in
+ * parallel through the pool bursts to one PostgreSQL connection per query. The
+ * product-detail render issues ~14 small queries at once — under multiple
+ * serverless instances that exhausts the shared max_connections ceiling
+ * (53300 "too many clients") and 500s the page. This helper holds exactly one
+ * connection for the whole scoped block; the driver safely queues the queries
+ * on a single client, and errors propagate unchanged.
+ */
+export interface QueryRunner {
+  rows: <T extends DbRow = DbRow>(text: string, params?: unknown[]) => Promise<T[]>;
+  one: <T extends DbRow = DbRow>(text: string, params?: unknown[]) => Promise<T | null>;
+}
+
+function clientRows<T extends DbRow = DbRow>(
+  client: PoolClient,
+  text: string,
+  params: unknown[],
+): Promise<T[]> {
+  return client.query(text, params).then((result) => result.rows as T[]);
+}
+
+function clientOne<T extends DbRow = DbRow>(
+  client: PoolClient,
+  text: string,
+  params: unknown[],
+): Promise<T | null> {
+  return client
+    .query(text, params)
+    .then((result) => (result.rows as T[])[0] ?? null);
+}
+
+export async function withPoolClient<T>(
+  fn: (db: QueryRunner) => Promise<T>,
+): Promise<T> {
+  const client = await pool().connect();
+  try {
+    const db: QueryRunner = {
+      rows: (text, params = []) => clientRows(client, text, params),
+      one: (text, params = []) => clientOne(client, text, params),
+    };
+    return await fn(db);
   } finally {
     client.release();
   }

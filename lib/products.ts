@@ -1,4 +1,4 @@
-import { rows, one } from "@/lib/db";
+import { rows, one, withPoolClient } from "@/lib/db";
 import type {
   ProductDetail,
   ProductSummary,
@@ -57,180 +57,186 @@ async function assembleDetail(
   p: Record<string, unknown>,
 ): Promise<ProductDetail> {
   const id = String(p.id);
-  const [cas, packings, properties, documents, images, sourceUrls, cats, revisions, safety, ghs] =
-    await Promise.all([
-      rows<CasRow>(
-        `SELECT
-             cas_number AS "casNumber",
-             is_primary AS "isPrimary",
-             note
-           FROM product_cas_numbers WHERE product_id = $1
-          ORDER BY is_primary DESC, cas_number`,
-        [id],
-      ),
-      rows<Packing>(
-        `SELECT
-             code, title, description,
-             size_value AS "sizeValue",
-             size_unit AS "sizeUnit",
-             price, currency
-           FROM product_packings
-          WHERE product_id = $1 AND is_active
-          ORDER BY size_value NULLS LAST, code`,
-        [id],
-      ),
-      rows<PropertyRow>(
-        `SELECT
-             pd.property_type AS "propertyType",
-             pd.label,
-             pp.value_text AS "valueText",
-             pp.unit,
-             pp.sort_order AS "sortOrder"
-           FROM product_properties pp
-           JOIN property_definitions pd ON pd.id = pp.property_definition_id
-          WHERE pp.product_id = $1
-          ORDER BY pd.property_type, pp.sort_order, pd.label`,
-        [id],
-      ),
-      rows<DocumentRow>(
-        `SELECT
-             document_type AS "documentType",
-             title, description,
-             storage_key AS "storageKey",
-             original_filename AS "originalFilename",
-             mime_type AS "mimeType"
-           FROM documents
-          WHERE product_id = $1 AND is_active
-          ORDER BY document_type, title`,
-        [id],
-      ),
-      rows<ImageRow>(
-        `SELECT
-             storage_key AS "storageKey",
-             url,
-             alt_text AS "altText",
-             caption,
-             is_primary AS "isPrimary",
-             sort_order AS "sortOrder"
-           FROM product_images WHERE product_id = $1
-          ORDER BY is_primary DESC, sort_order, id`,
-        [id],
-      ),
-      rows<SourceUrlRow>(
-        `SELECT
-             url,
-             source_type AS "sourceType",
-             is_primary AS "isPrimary",
-             note
-           FROM product_source_urls WHERE product_id = $1
-          ORDER BY is_primary DESC, url`,
-        [id],
-      ),
-      rows<CategoryLink>(
-        `SELECT c.slug, c.name, pc.is_primary
-           FROM product_categories pc
-           JOIN categories c ON c.id = pc.category_id AND c.is_active
-          WHERE pc.product_id = $1
-          ORDER BY pc.is_primary DESC, c.name`,
-        [id],
-      ),
-      rows<{ revisionDate: string }>(
-        `SELECT revision_date AS "revisionDate"
-           FROM product_revisions WHERE product_id = $1
-          ORDER BY revision_date DESC`,
-        [id],
-      ),
-      one<SafetyData>(
-        `SELECT
-             signal_word AS "signalWord",
-             un_number AS "unNumber",
-             imco_class AS "imcoClass",
-             packing_group AS "packingGroup",
-             hazardous_statement AS "hazardousStatement",
-             precaution_statement AS "precautionStatement",
-             risk_statement AS "riskStatement",
-             safety_statement AS "safetyStatement",
-             revision_date AS "revisionDate",
-             source_url AS "sourceUrl"
-           FROM product_safety
-          WHERE product_id = $1`,
-        [id],
-      ),
-      rows<GhsRow>(
-        `SELECT ghs_code AS "ghsCode"
-           FROM product_safety_ghs
-           JOIN product_safety ps ON ps.id = product_safety_ghs.product_safety_id
-          WHERE ps.product_id = $1
-          ORDER BY ghs_code`,
-        [id],
-      ),
-    ]);
+  // The whole detail assembly runs on ONE pooled connection: firing the ~14
+  // small queries through the pool concurrently bursts to one PostgreSQL
+  // connection per query, which exhausts the shared server connection ceiling
+  // under multiple serverless instances (see withPoolClient in lib/db.ts).
+  return withPoolClient(async (db) => {
+    const [cas, packings, properties, documents, images, sourceUrls, cats, revisions, safety, ghs] =
+      await Promise.all([
+        db.rows<CasRow>(
+          `SELECT
+               cas_number AS "casNumber",
+               is_primary AS "isPrimary",
+               note
+             FROM product_cas_numbers WHERE product_id = $1
+            ORDER BY is_primary DESC, cas_number`,
+          [id],
+        ),
+        db.rows<Packing>(
+          `SELECT
+               code, title, description,
+               size_value AS "sizeValue",
+               size_unit AS "sizeUnit",
+               price, currency
+             FROM product_packings
+            WHERE product_id = $1 AND is_active
+            ORDER BY size_value NULLS LAST, code`,
+          [id],
+        ),
+        db.rows<PropertyRow>(
+          `SELECT
+               pd.property_type AS "propertyType",
+               pd.label,
+               pp.value_text AS "valueText",
+               pp.unit,
+               pp.sort_order AS "sortOrder"
+             FROM product_properties pp
+             JOIN property_definitions pd ON pd.id = pp.property_definition_id
+            WHERE pp.product_id = $1
+            ORDER BY pd.property_type, pp.sort_order, pd.label`,
+          [id],
+        ),
+        db.rows<DocumentRow>(
+          `SELECT
+               document_type AS "documentType",
+               title, description,
+               storage_key AS "storageKey",
+               original_filename AS "originalFilename",
+               mime_type AS "mimeType"
+             FROM documents
+            WHERE product_id = $1 AND is_active
+            ORDER BY document_type, title`,
+          [id],
+        ),
+        db.rows<ImageRow>(
+          `SELECT
+               storage_key AS "storageKey",
+               url,
+               alt_text AS "altText",
+               caption,
+               is_primary AS "isPrimary",
+               sort_order AS "sortOrder"
+             FROM product_images WHERE product_id = $1
+            ORDER BY is_primary DESC, sort_order, id`,
+          [id],
+        ),
+        db.rows<SourceUrlRow>(
+          `SELECT
+               url,
+               source_type AS "sourceType",
+               is_primary AS "isPrimary",
+               note
+             FROM product_source_urls WHERE product_id = $1
+            ORDER BY is_primary DESC, url`,
+          [id],
+        ),
+        db.rows<CategoryLink>(
+          `SELECT c.slug, c.name, pc.is_primary
+             FROM product_categories pc
+             JOIN categories c ON c.id = pc.category_id AND c.is_active
+            WHERE pc.product_id = $1
+            ORDER BY pc.is_primary DESC, c.name`,
+          [id],
+        ),
+        db.rows<{ revisionDate: string }>(
+          `SELECT revision_date AS "revisionDate"
+             FROM product_revisions WHERE product_id = $1
+            ORDER BY revision_date DESC`,
+          [id],
+        ),
+        db.one<SafetyData>(
+          `SELECT
+               signal_word AS "signalWord",
+               un_number AS "unNumber",
+               imco_class AS "imcoClass",
+               packing_group AS "packingGroup",
+               hazardous_statement AS "hazardousStatement",
+               precaution_statement AS "precautionStatement",
+               risk_statement AS "riskStatement",
+               safety_statement AS "safetyStatement",
+               revision_date AS "revisionDate",
+               source_url AS "sourceUrl"
+             FROM product_safety
+            WHERE product_id = $1`,
+          [id],
+        ),
+        db.rows<GhsRow>(
+          `SELECT ghs_code AS "ghsCode"
+             FROM product_safety_ghs
+             JOIN product_safety ps ON ps.id = product_safety_ghs.product_safety_id
+            WHERE ps.product_id = $1
+            ORDER BY ghs_code`,
+          [id],
+        ),
+      ]);
 
-  const synonyms = (
-    await rows<{ synonym: string }>(
-      `SELECT synonym FROM product_synonyms WHERE product_id = $1
-        ORDER BY is_common DESC, sort_order, synonym`,
+    const synonyms = (
+      await db.rows<{ synonym: string }>(
+        `SELECT synonym FROM product_synonyms WHERE product_id = $1
+          ORDER BY is_common DESC, sort_order, synonym`,
+        [id],
+      )
+    ).map((r) => r.synonym);
+
+    const molecular = await db.one<Record<string, unknown>>(
+      `SELECT formula, molecular_weight
+         FROM product_molecular_data
+        WHERE product_id = $1 AND is_primary`,
       [id],
-    )
-  ).map((r) => r.synonym);
+    );
 
-  const molecular = await one<Record<string, unknown>>(
-    `SELECT formula, molecular_weight
-       FROM product_molecular_data
-      WHERE product_id = $1 AND is_primary`,
-    [id],
-  );
+    const hs = await db.one<Record<string, unknown>>(
+      `SELECT h.code
+         FROM product_hs_codes ph
+         JOIN hs_codes h ON h.id = ph.hs_code_id
+        WHERE ph.product_id = $1 AND ph.is_primary`,
+      [id],
+    );
 
-  const hs = await one<Record<string, unknown>>(
-    `SELECT h.code
-       FROM product_hs_codes ph
-       JOIN hs_codes h ON h.id = ph.hs_code_id
-      WHERE ph.product_id = $1 AND ph.is_primary`,
-    [id],
-  );
+    const shelf = await db.one<Record<string, unknown>>(
+      `SELECT period_value, period_unit, notes
+         FROM product_shelf_life WHERE product_id = $1`,
+      [id],
+    );
 
-  const shelf = await one<Record<string, unknown>>(
-    `SELECT period_value, period_unit, notes
-       FROM product_shelf_life WHERE product_id = $1`,
-    [id],
-  );
+    const primaryCas =
+      cas.find((c) => c.isPrimary)?.casNumber ?? cas[0]?.casNumber ?? null;
 
-  const primaryCas =
-    cas.find((c) => c.isPrimary)?.casNumber ?? cas[0]?.casNumber ?? null;
-
-  return {
-    id,
-    slug: String(p.slug ?? p.article_number ?? p.id),
-    name: String(p.name),
-    articleNumber: p.article_number ? String(p.article_number) : null,
-    summary: p.summary ? String(p.summary) : null,
-    description: p.description ? String(p.description) : null,
-    legacyRef: p.legacy_ref ? String(p.legacy_ref) : null,
-    status: p.status ? String(p.status) : "active",
-    isFeatured: Boolean(p.is_featured),
-    primaryCas,
-    formula: molecular?.formula ? String(molecular.formula) : null,
-    molecularWeight:
-      molecular?.molecular_weight !== null &&
-      molecular?.molecular_weight !== undefined
-        ? Number(molecular.molecular_weight)
-        : null,
-    hsCode: hs?.code ? String(hs.code) : null,
-    shelfLifeText: shelf?.notes ? String(shelf.notes) : null,
-    primaryCategorySlug: cats.find((c) => c.isPrimary)?.slug ?? null,
-    primaryCategoryName: cats.find((c) => c.isPrimary)?.name ?? null,
-    cas,
-    packings,
-    properties,
-    documents,
-    images,
-    sourceUrls,
-    categories: cats,
-    revisionDates: revisions.map((r) => r.revisionDate),
-    synonyms,
-    safety: safety ?? null,
-    ghs,
-  };
+    return {
+      id,
+      slug: String(p.slug ?? p.article_number ?? p.id),
+      name: String(p.name),
+      articleNumber: p.article_number ? String(p.article_number) : null,
+      summary: p.summary ? String(p.summary) : null,
+      description: p.description ? String(p.description) : null,
+      legacyRef: p.legacy_ref ? String(p.legacy_ref) : null,
+      status: p.status ? String(p.status) : "active",
+      isFeatured: Boolean(p.is_featured),
+      primaryCas,
+      formula: molecular?.formula ? String(molecular.formula) : null,
+      molecularWeight:
+        molecular?.molecular_weight !== null &&
+        molecular?.molecular_weight !== undefined
+          ? Number(molecular.molecular_weight)
+          : null,
+      hsCode: hs?.code ? String(hs.code) : null,
+      shelfLifeText: shelf?.notes ? String(shelf.notes) : null,
+      primaryCategorySlug: cats.find((c) => c.isPrimary)?.slug ?? null,
+      primaryCategoryName: cats.find((c) => c.isPrimary)?.name ?? null,
+      cas,
+      packings,
+      properties,
+      documents,
+      images,
+      sourceUrls,
+      categories: cats,
+      revisionDates: revisions.map((r) => r.revisionDate),
+      synonyms,
+      safety: safety ?? null,
+      ghs,
+    };
+  });
 }
 /**
  * Public product listing. Imported product rows are catalogue rows; optional
