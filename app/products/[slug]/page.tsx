@@ -46,10 +46,10 @@ export default async function ProductPage({
       </div>
 
       <ProductHeader product={product} />
-      <ProductInfoTable product={product} />
 
       <div className="container-site grid grid-cols-1 gap-8 lg:grid-cols-[2fr,1fr]">
         <div className="min-w-0 space-y-10">
+          <ProductInfoTable product={product} />
           <DescriptionSection product={product} />
           <PropertiesSection properties={product.properties} />
           <SafetySection product={product} />

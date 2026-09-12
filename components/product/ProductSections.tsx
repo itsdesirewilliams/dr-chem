@@ -76,9 +76,7 @@ export function ProductInfoTable({ product }: { product: ProductDetail }) {
   if (!visible.length) return null;
   return (
     <div>
-      <h2 className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-500">
-        Product information
-      </h2>
+      <SectionHeading title="Product Information" serif={false} />
       <dl className="mt-3 divide-y divide-ink-200 border-y border-ink-200">
         {visible.map((r) => (
           <div

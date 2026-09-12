@@ -1,4 +1,3 @@
-import { Mail } from "lucide-react";
 import { WhatsAppIcon } from "@/components/icons";
 import { whatsappLink } from "@/lib/site";
 import { CTA, btn } from "@/components/ui";
@@ -7,15 +6,16 @@ import { CTA, btn } from "@/components/ui";
  * WhatsApp conversion component.
  *
  * When NEXT_PUBLIC_WHATSAPP_NUMBER is configured this renders a real link to
- * `https://wa.me/<number>?text=<message>`. Until a number is provided it
- * renders the same slot as an email CTA so the button is never dead — and the
- * site never fabricates a phone number.
+ * `https://wa.me/<number>?text=<message>` with the WhatsApp brand mark. When no
+ * number is configured the component renders nothing: a WhatsApp-labelled
+ * button that actually opens an email client (mail icon + mailto) misleads the
+ * visitor, and every call site already sits next to a real email action. The
+ * button reappears automatically once the number is provided.
  */
 export function WhatsAppCTA({
   message,
   label = "Chat on WhatsApp",
   size = "md",
-  variant = "primary",
   className,
 }: {
   message?: string;
@@ -25,27 +25,8 @@ export function WhatsAppCTA({
   className?: string;
 }) {
   const href = whatsappLink(message);
+  if (!href) return null;
   const sizing = size === "lg" ? "h-5 w-5" : size === "sm" ? "h-4 w-4" : "h-[18px] w-[18px]";
-  const icon = href ? (
-    <WhatsAppIcon className={`${sizing} shrink-0`} aria-hidden="true" />
-  ) : (
-    <Mail className={`${sizing} shrink-0`} strokeWidth={2} aria-hidden="true" />
-  );
-  const fallbackCls = variant === "secondary" ? btn.secondary : btn.primary;
-
-  if (!href) {
-    return (
-      <CTA
-        href="mailto:marketing@drchem.co.in"
-        external
-        className={className ?? fallbackCls}
-        aria-label="Contact DR Chemicals by email"
-      >
-        {icon}
-        {label}
-      </CTA>
-    );
-  }
 
   return (
     <CTA
@@ -54,7 +35,7 @@ export function WhatsAppCTA({
       className={className ?? btn.whatsapp}
       aria-label={`${label} (opens WhatsApp)`}
     >
-      {icon}
+      <WhatsAppIcon className={`${sizing} shrink-0`} aria-hidden="true" />
       {label}
     </CTA>
   );
